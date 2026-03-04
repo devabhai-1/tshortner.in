@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icon Generator - TShortner</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    canvas {
+      border: 1px solid #ddd;
+      margin: 10px;
+      background: white;
+    }
+    .controls {
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      background: #6366f1;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #4f46e5;
+    }
+  </style>
+</head>
+<body>
+  <h1>TShortner Icon Generator</h1>
+  <p>This page helps generate PWA icons. For now, use an online tool like:</p>
+  <ul>
+    <li><a href="https://www.pwabuilder.com/imageGenerator" target="_blank">PWA Builder Image Generator</a></li>
+    <li><a href="https://realfavicongenerator.net/" target="_blank">RealFaviconGenerator</a></li>
+    <li><a href="https://favicon.io/" target="_blank">Favicon.io</a></li>
+  </ul>
+  
+  <h2>Icon Specifications:</h2>
+  <ul>
+    <li>Base size: 512x512px (recommended)</li>
+    <li>Format: PNG with transparency</li>
+    <li>Background: Gradient (Purple to Green) or Solid</li>
+    <li>Letter: "T" in white, bold font</li>
+    <li>Sizes needed: 72, 96, 128, 144, 152, 192, 384, 512</li>
+  </ul>
+  
+  <h2>Quick Canvas Generator:</h2>
+  <div class="controls">
+    <button onclick="generateIcon(192)">Generate 192x192</button>
+    <button onclick="generateIcon(512)">Generate 512x512</button>
+  </div>
+  <canvas id="iconCanvas" width="512" height="512"></canvas>
+  
+  <script>
+    function generateIcon(size) {
+      const canvas = document.getElementById('iconCanvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      
+      // Gradient background
+      const gradient = ctx.createLinearGradient(0, 0, size, size);
+      gradient.addColorStop(0, '#6366f1');
+      gradient.addColorStop(0.5, '#8b5cf6');
+      gradient.addColorStop(1, '#22c55e');
+      
+      // Rounded rectangle background
+      const radius = size * 0.2;
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.moveTo(radius, 0);
+      ctx.lineTo(size - radius, 0);
+      ctx.quadraticCurveTo(size, 0, size, radius);
+      ctx.lineTo(size, size - radius);
+      ctx.quadraticCurveTo(size, size, size - radius, size);
+      ctx.lineTo(radius, size);
+      ctx.quadraticCurveTo(0, size, 0, size - radius);
+      ctx.lineTo(0, radius);
+      ctx.quadraticCurveTo(0, 0, radius, 0);
+      ctx.closePath();
+      ctx.fill();
+      
+      // Letter T
+      ctx.fillStyle = 'white';
+      ctx.font = `bold ${size * 0.6}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('T', size / 2, size / 2);
+      
+      // Download
+      canvas.toBlob((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `icon-${size}x${size}.png`;
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+  </script>
+</body>
+</html>
