@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import PWAInstallPrompt from './components/PWAInstallPrompt'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Public Pages
 import Home from './pages/Home'
@@ -27,9 +28,10 @@ import ProfilePublic from './pages/ProfilePublic'
 
 function App() {
   return (
-    <AuthProvider>
-      <PWAInstallPrompt />
-      <Routes>
+    <ErrorBoundary>
+      <AuthProvider>
+        <PWAInstallPrompt />
+        <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -81,6 +83,7 @@ function App() {
         } />
       </Routes>
     </AuthProvider>
+    </ErrorBoundary>
   )
 }
 

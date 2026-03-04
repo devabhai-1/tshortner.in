@@ -1,12 +1,11 @@
-/* Announcement Banner */
+/* Announcement Banner - scrolls with content, never above navbar */
 .announcementBanner {
   background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(16, 185, 129, 0.1));
   border-bottom: 1px solid rgba(34, 197, 94, 0.3);
   padding: 0.75rem 1rem;
   margin-bottom: 0;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  position: relative;
+  z-index: 1;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -319,14 +318,16 @@
   font-weight: 500;
 }
 
+.chartSection {
+  contain: layout;
+}
+
 .chartWrapper {
   margin-top: 1rem;
   padding: 0;
-  width: calc(100% + 2.2rem);
-  margin-left: -1.1rem;
-  margin-right: -1.1rem;
-  overflow-x: auto;
-  overflow-y: hidden;
+  width: 100%;
+  max-width: 100%;
+  min-height: 340px;
   background: transparent;
   border-radius: 0;
   border: none;
@@ -335,6 +336,7 @@
 
 .chartWrapper :global(.recharts-wrapper) {
   font-family: inherit;
+  width: 100% !important;
   min-width: 100%;
 }
 
@@ -357,45 +359,16 @@
   filter: drop-shadow(0 2px 4px rgba(96, 165, 250, 0.2));
 }
 
-/* Mobile Chart Optimizations */
+/* Mobile Chart - allow horizontal scroll only on small screens */
 @media (max-width: 768px) {
   .chartWrapper {
-    padding: 0.5rem 0;
-    margin-top: 0.75rem;
+    min-height: 320px;
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
   .chartWrapper :global(.recharts-wrapper) {
-    min-width: 600px; /* Ensure chart doesn't get too small on mobile */
-  }
-
-  .chartWrapper :global(.recharts-surface) {
-    overflow: visible;
-  }
-
-  /* Make chart responsive container work better on mobile */
-  .chartWrapper :global(.recharts-responsive-container) {
-    width: 100% !important;
-    max-width: 100%;
-  }
-}
-
-@media (max-width: 640px) {
-  .chartWrapper {
-    padding: 0;
-    margin-left: -1rem;
-    margin-right: -1rem;
-    width: calc(100% + 2rem);
-  }
-
-  .chartWrapper :global(.recharts-wrapper) {
-    min-width: 550px;
-  }
-}
-
-@media (max-width: 480px) {
-  .chartWrapper :global(.recharts-wrapper) {
-    min-width: 500px;
+    min-width: 480px;
   }
 }
 

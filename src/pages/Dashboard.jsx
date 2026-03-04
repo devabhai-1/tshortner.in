@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { ref, get } from 'firebase/database';
 import { db } from '../firebase/config';
@@ -24,6 +24,8 @@ function Dashboard() {
   });
   const [dailyData, setDailyData] = useState([]);
   const [yesterdayEarning, setYesterdayEarning] = useState(0);
+  const [bannerVisible, setBannerVisible] = useState(true);
+  const [copyFeedback, setCopyFeedback] = useState('');
 
   // Handle window resize for mobile detection
   useEffect(() => {
@@ -100,31 +102,47 @@ function Dashboard() {
     loadDashboardData();
   }, [user]);
 
+  const chartDataLast10 = useMemo(() => {
+    if (!dailyData.length) return [];
+    const last10 = dailyData.slice(0, 10).reverse();
+    return last10.map(([dateKey, obj]) => {
+      const full = formatDateLabel(dateKey);
+      const parts = full.split(' ');
+      const label = parts.length >= 2 ? `${parts[0]} ${parts[1]}` : full;
+      return {
+        date: label,
+        dateKey,
+        earning: parseFloat(obj.earning || 0),
+        impressions: parseFloat(obj.impressions || 0) / 1000,
+      };
+    });
+  }, [dailyData]);
+
   if (loading) {
     return <LoadingSpinner message="Loading dashboard..." />;
   }
 
   return (
     <Layout activeNav="dashboard">
-      {/* Announcement Banner */}
+      {/* Announcement Banner - stays below navbar, scrolls with content */}
+      {bannerVisible && (
       <div className={styles.announcementBanner}>
         <div className={styles.announcementContent}>
           <span className={styles.announcementIcon}>📢</span>
           <div className={styles.announcementText}>
             <strong>Important Update:</strong> Apne dashboard me latest features aur improvements check karein. Agar koi issue ho to support se contact karein.
           </div>
-          <button 
+          <button
+            type="button"
             className={styles.announcementClose}
-            onClick={() => {
-              const banner = document.querySelector(`.${styles.announcementBanner}`);
-              if (banner) banner.style.display = 'none';
-            }}
+            onClick={() => setBannerVisible(false)}
             aria-label="Close announcement"
           >
             ×
           </button>
         </div>
       </div>
+      )}
 
       <div className={styles.mainInner}>
         {/* Title */}
@@ -205,7 +223,7 @@ function Dashboard() {
 
         {/* CHART SECTION - Last 10 Days */}
         {dailyData.length > 0 && (
-          <section>
+          <section className={styles.chartSection}>
             <div className={styles.card}>
               <div className={styles.sectionTitle}>
                 <div>
@@ -216,27 +234,10 @@ function Dashboard() {
               </div>
 
               <div className={styles.chartWrapper}>
-                <ResponsiveContainer width="100%" height={isMobile ? 320 : 400}>
+                <ResponsiveContainer width="100%" height={isMobile ? 320 : 400} minHeight={isMobile ? 320 : 400}>
                   <ComposedChart
-                    data={dailyData.slice(0, 10).reverse().map(([dateKey, obj]) => {
-                      const dateLabel = formatDateLabel(dateKey).split(' ')[0];
-                      let displayDate = dateLabel;
-                      if (isMobile && dateLabel.includes(' ')) {
-                        const parts = dateLabel.split(' ');
-                        displayDate = parts.length >= 2 ? `${parts[0]} ${parts[1].substring(0, 3)}` : dateLabel.substring(0, 6);
-                      }
-                      return {
-                        date: displayDate,
-                        earning: parseFloat(obj.earning || 0),
-                        impressions: parseFloat(obj.impressions || 0) / 1000,
-                      };
-                    })}
-                    margin={{ 
-                      top: 10, 
-                      right: isMobile ? 5 : 10, 
-                      left: isMobile ? 0 : 0, 
-                      bottom: isMobile ? 30 : 15 
-                    }}
+                    data={chartDataLast10}
+                    margin={{ top: 16, right: 20, left: 8, bottom: isMobile ? 50 : 24 }}
                   >
                     <defs>
                       <linearGradient id="earningGradient" x1="0" y1="0" x2="0" y2="1">
@@ -252,43 +253,37 @@ function Dashboard() {
                     <XAxis 
                       dataKey="date" 
                       stroke="var(--text-soft)"
-                      tick={{ 
-                        fontSize: isMobile ? '0.7rem' : '0.8rem',
-                        fill: 'var(--text-soft)',
-                        fontWeight: 500
-                      }}
-                      angle={isMobile ? -45 : 0}
+                      tick={{ fontSize: isMobile ? 11 : 12, fill: 'var(--text-soft)', fontWeight: 500 }}
+                      angle={isMobile ? -35 : 0}
                       textAnchor={isMobile ? 'end' : 'middle'}
-                      height={isMobile ? 60 : 40}
+                      height={isMobile ? 56 : 44}
                       axisLine={{ stroke: 'var(--border-soft)' }}
                       tickLine={{ stroke: 'var(--border-soft)' }}
+                      interval={0}
+                      tickMargin={8}
                     />
                     <YAxis 
                       yAxisId="left"
                       stroke="var(--text-soft)"
-                      tick={{ 
-                        fontSize: isMobile ? '0.7rem' : '0.8rem',
-                        fill: 'var(--text-soft)',
-                        fontWeight: 500
-                      }}
-                      width={isMobile ? 50 : 60}
+                      tick={{ fontSize: isMobile ? 10 : 11, fill: 'var(--text-soft)', fontWeight: 500 }}
+                      width={44}
                       axisLine={{ stroke: 'var(--border-soft)' }}
                       tickLine={{ stroke: 'var(--border-soft)' }}
                       domain={['auto', 'auto']}
+                      tickFormatter={(v) => Number(v).toFixed(1)}
+                      allowDecimals={true}
                     />
                     <YAxis 
                       yAxisId="right"
                       orientation="right"
                       stroke="var(--text-soft)"
-                      tick={{ 
-                        fontSize: isMobile ? '0.7rem' : '0.8rem',
-                        fill: 'var(--text-soft)',
-                        fontWeight: 500
-                      }}
-                      width={isMobile ? 45 : 60}
+                      tick={{ fontSize: isMobile ? 10 : 11, fill: 'var(--text-soft)', fontWeight: 500 }}
+                      width={44}
                       axisLine={{ stroke: 'var(--border-soft)' }}
                       tickLine={{ stroke: 'var(--border-soft)' }}
                       domain={['auto', 'auto']}
+                      tickFormatter={(v) => Number(v).toFixed(1)}
+                      allowDecimals={true}
                     />
                     <Tooltip 
                       contentStyle={{
@@ -300,43 +295,40 @@ function Dashboard() {
                         padding: isMobile ? '0.6rem' : '0.75rem',
                         boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)'
                       }}
-                      wrapperStyle={{
-                        fontSize: isMobile ? '0.75rem' : '0.85rem'
-                      }}
+                      wrapperStyle={{ fontSize: isMobile ? '0.75rem' : '0.85rem' }}
                       cursor={{ stroke: 'var(--accent)', strokeWidth: 1, strokeDasharray: '5 5' }}
+                      formatter={(value, name) => [name === 'Earning ($)' ? `$ ${Number(value).toFixed(2)}` : `${Number(value).toFixed(2)} K`, name]}
+                      labelFormatter={(label) => `Date: ${label}`}
                     />
                     <Legend 
-                      wrapperStyle={{ 
-                        fontSize: isMobile ? '0.8rem' : '0.9rem',
-                        paddingTop: isMobile ? '0.75rem' : '1.25rem',
-                        fontWeight: 600
-                      }}
-                      iconSize={isMobile ? 12 : 14}
+                      wrapperStyle={{ fontSize: isMobile ? '0.8rem' : '0.9rem', paddingTop: '0.75rem', fontWeight: 600 }}
+                      iconSize={12}
                       iconType="rect"
                     />
-                    {/* Area chart for Earning - Trading style */}
                     <Area 
                       yAxisId="left"
                       type="monotone" 
                       dataKey="earning" 
                       fill="url(#earningGradient)"
                       stroke="#22c55e" 
-                      strokeWidth={isMobile ? 2 : 2.5}
+                      strokeWidth={2}
                       name="Earning ($)"
-                      activeDot={{ r: isMobile ? 6 : 8, fill: '#22c55e', stroke: '#ffffff', strokeWidth: 2 }}
+                      isAnimationActive={true}
+                      animationDuration={400}
+                      activeDot={{ r: 6, fill: '#22c55e', stroke: '#fff', strokeWidth: 2 }}
                     />
-                    {/* Line chart for Impressions - Trading style */}
                     <Line 
                       yAxisId="right"
                       type="monotone" 
                       dataKey="impressions" 
                       stroke="#60a5fa" 
-                      strokeWidth={isMobile ? 2 : 2.5}
+                      strokeWidth={2}
                       dot={false}
-                      activeDot={{ r: isMobile ? 6 : 8, fill: '#60a5fa', stroke: '#ffffff', strokeWidth: 2 }}
                       name="Impressions (K)"
+                      isAnimationActive={true}
+                      animationDuration={400}
+                      activeDot={{ r: 6, fill: '#60a5fa', stroke: '#fff', strokeWidth: 2 }}
                     />
-                    {/* Reference line for zero earning */}
                     <ReferenceLine yAxisId="left" y={0} stroke="var(--border-soft)" strokeDasharray="2 2" opacity={0.5} />
                   </ComposedChart>
                 </ResponsiveContainer>
@@ -430,18 +422,23 @@ function Dashboard() {
               </button>
               <button 
                 className={styles.optionBtn}
-                onClick={() => {
-                  const text = dailyData.map(([dateKey, obj]) => 
-                    `${formatDateLabel(dateKey)} | Impressions: ${formatNumber(obj.impressions || 0)} | CPM: $${formatMoney(obj.cpm || 0)} | Earning: $${formatMoney(obj.earning || 0)}`
-                  ).join('\n');
-                  
-                  navigator.clipboard.writeText(text).then(() => {
-                    alert('Data copied to clipboard!');
-                  });
+                onClick={async () => {
+                  setCopyFeedback('');
+                  try {
+                    const text = dailyData.map(([dateKey, obj]) => 
+                      `${formatDateLabel(dateKey)} | Impressions: ${formatNumber(obj.impressions || 0)} | CPM: $${formatMoney(obj.cpm || 0)} | Earning: $${formatMoney(obj.earning || 0)}`
+                    ).join('\n');
+                    await navigator.clipboard.writeText(text);
+                    setCopyFeedback('Copied!');
+                    setTimeout(() => setCopyFeedback(''), 2000);
+                  } catch (e) {
+                    setCopyFeedback('Copy failed');
+                    setTimeout(() => setCopyFeedback(''), 3000);
+                  }
                 }}
                 disabled={dailyData.length === 0}
               >
-                📋 Copy Data
+                📋 Copy Data{copyFeedback ? ` — ${copyFeedback}` : ''}
               </button>
               <button 
                 className={styles.optionBtn}

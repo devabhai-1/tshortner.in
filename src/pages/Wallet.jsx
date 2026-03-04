@@ -32,6 +32,7 @@ function Wallet() {
   const [amountError, setAmountError] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [withdrawNote, setWithdrawNote] = useState('Note: abhi ye Firebase ke wallet node se connected hai. Request bhejne par currentBalance → kam, pendingBalance → badhega, aur request list me "pending" status ke saath save hogi.');
+  const [walletError, setWalletError] = useState('');
 
   const mapStatusClass = (status) => {
     const s = (status || "").toLowerCase();
@@ -87,10 +88,18 @@ function Wallet() {
   };
 
   useEffect(() => {
-    if (user?.email) {
-      const emailKey = emailToKey(user.email);
-      loadWallet(emailKey).then(() => setLoading(false));
-    }
+    if (!user?.email) return;
+    const emailKey = emailToKey(user.email);
+    setWalletError('');
+    loadWallet(emailKey)
+      .then(() => setLoading(false))
+      .catch((err) => {
+        console.error('Wallet load error:', err);
+        setWalletError('Wallet load karte waqt error: ' + (err?.code || err?.message || 'Unknown error'));
+        setWalletState({ currentBalance: 0, pendingBalance: 0, totalWithdrawn: 0 });
+        setHistory([]);
+        setLoading(false);
+      });
   }, [user]);
 
   // Update amount input when wallet state changes (EXACT same as HTML)
@@ -191,11 +200,14 @@ function Wallet() {
       setWithdrawNote("Request submit ho gayi. Admin approve karega to status Pending → Paid ho jayega.");
       
       // Alert message (EXACT same as HTML)
+      const accountDisplay = method === 'Bank' 
+        ? `${accountHolderName.trim()} - ${bankName.trim()}` 
+        : account.trim();
       alert(
         "Withdraw Request Submitted\n\n" +
         "Amount: $" + formatMoney(amountVal) + "\n" +
         "Method: " + method + "\n" +
-        "Account: " + account.trim() + "\n\n" +
+        "Account: " + accountDisplay + "\n\n" +
         "Balance update ho chuka hai. Ab request Pending me hai."
       );
       
@@ -236,6 +248,8 @@ function Wallet() {
             <span>Currency: USD ($)</span>
           </div>
         </div>
+
+        {walletError && <div className={styles.errorText} style={{ display: 'block', marginBottom: '1rem' }}>{walletError}</div>}
 
         {/* WALLET SUMMARY */}
         <section className={styles.walletGrid}>

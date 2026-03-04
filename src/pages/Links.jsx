@@ -11,6 +11,7 @@ function Links() {
   const [loading, setLoading] = useState(true);
   const [webLinks, setWebLinks] = useState([]);
   const [telegramLinks, setTelegramLinks] = useState([]);
+  const [loadError, setLoadError] = useState('');
   
   // Form state
   const [webUrl, setWebUrl] = useState('');
@@ -70,9 +71,13 @@ function Links() {
 
         setTelegramLinks(tgLinks);
         setWebLinks(webLinksData);
-        setLoading(false);
+        setLoadError('');
       } catch (err) {
-        console.error(err);
+        console.error('Links load error:', err);
+        setLoadError('Links load karte waqt error: ' + (err?.code || err?.message || 'Unknown error'));
+        setTelegramLinks([]);
+        setWebLinks([]);
+      } finally {
         setLoading(false);
       }
     };
@@ -134,10 +139,11 @@ function Links() {
   };
 
   const copyToClipboard = (text) => {
+    if (!text) return;
     navigator.clipboard.writeText(text).then(
       () => alert('Copied: ' + text),
       () => alert('Copy nahi ho paya, manually copy karein.')
-    );
+    ).catch(() => alert('Copy nahi ho paya, manually copy karein.'));
   };
 
   const copyShortOut = () => {
@@ -145,7 +151,7 @@ function Links() {
     navigator.clipboard.writeText(lastShortUrlForCopy).then(
       () => alert('Short URL copied:\n' + lastShortUrlForCopy),
       () => alert('Copy nahi ho paya, manually copy karein.')
-    );
+    ).catch(() => alert('Copy nahi ho paya, manually copy karein.'));
   };
 
   const openBot = (url) => {
@@ -174,6 +180,8 @@ function Links() {
             <span>Terabox ID → teraboxlinke.com</span>
           </div>
         </div>
+
+        {loadError && <div className={styles.errorText} style={{ display: 'block', marginBottom: '1rem' }}>{loadError}</div>}
 
         {/* Telegram Bots */}
         <section className={styles.card} style={{ marginBottom: '1rem' }}>
