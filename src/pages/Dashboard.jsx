@@ -9,6 +9,8 @@ import Layout from '../components/Layout';
 import LoadingSpinner from '../components/LoadingSpinner';
 import styles from './Dashboard.module.css';
 
+const FIROPLAY_WEB_DASHBOARD = 'https://web.firoplay.com';
+
 function Dashboard() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -24,8 +26,15 @@ function Dashboard() {
   });
   const [dailyData, setDailyData] = useState([]);
   const [yesterdayEarning, setYesterdayEarning] = useState(0);
-  const [bannerVisible, setBannerVisible] = useState(true);
+  /* Shown on every Dashboard visit / full refresh; only this page uses this modal. */
+  const [showUpdateModal, setShowUpdateModal] = useState(true);
   const [copyFeedback, setCopyFeedback] = useState('');
+
+  const dismissUpdateModal = () => setShowUpdateModal(false);
+
+  const openFiroplayDashboard = () => {
+    window.open(FIROPLAY_WEB_DASHBOARD, '_blank', 'noopener,noreferrer');
+  };
 
   // Handle window resize for mobile detection
   useEffect(() => {
@@ -124,24 +133,57 @@ function Dashboard() {
 
   return (
     <Layout activeNav="dashboard">
-      {/* Announcement Banner - stays below navbar, scrolls with content */}
-      {bannerVisible && (
-      <div className={styles.announcementBanner}>
-        <div className={styles.announcementContent}>
-          <span className={styles.announcementIcon}>📢</span>
-          <div className={styles.announcementText}>
-            <strong>Important Update:</strong> Apne dashboard me latest features aur improvements check karein. Agar koi issue ho to support se contact karein.
+      {showUpdateModal && (
+        <div
+          className={styles.updateModalBackdrop}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="firoplay-update-title"
+        >
+          <div className={styles.updateModal}>
+            <div className={styles.updateModalHeader}>
+              <span className={styles.updateModalIcon} aria-hidden>📢</span>
+              <h2 id="firoplay-update-title" className={styles.updateModalTitle}>
+                Firoplay CPM update
+              </h2>
+            </div>
+            <div className={styles.updateModalBody}>
+              <p className={styles.updateModalLead}>
+                Earn more with <strong>Firoplay</strong>: we pay a clear CPM on your views.
+              </p>
+              <ul className={styles.updateModalList}>
+                <li>
+                  <strong>$2 CPM</strong> — $2 per 1,000 views on standard traffic.
+                </li>
+                <li>
+                  <strong>$3 CPM</strong> — $3 per 1,000 views when you deliver <strong>more than 10,000 views</strong>.
+                </li>
+              </ul>
+              <p className={styles.updateModalFiroplayHint}>
+                Your Firoplay publisher dashboard lives on{' '}
+                <a
+                  href={FIROPLAY_WEB_DASHBOARD}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.updateModalInlineLink}
+                >
+                  web.firoplay.com
+                </a>
+                — open it from the button below.
+              </p>
+            </div>
+            <div className={styles.updateModalActions}>
+              <button type="button" className={styles.updateModalBtnFiroplay} onClick={openFiroplayDashboard}>
+                Open Firoplay dashboard
+              </button>
+              <div className={styles.updateModalActionRow}>
+                <button type="button" className={styles.updateModalBtnSecondary} onClick={dismissUpdateModal}>
+                  Got it
+                </button>
+              </div>
+            </div>
           </div>
-          <button
-            type="button"
-            className={styles.announcementClose}
-            onClick={() => setBannerVisible(false)}
-            aria-label="Close announcement"
-          >
-            ×
-          </button>
         </div>
-      </div>
       )}
 
       <div className={styles.mainInner}>
@@ -150,10 +192,6 @@ function Dashboard() {
           <div>
             <h1>Dashboard</h1>
             <p>Daily stats + overall earning ka clean overview.</p>
-          </div>
-          <div className={styles.tagSmall}>
-            <span className={styles.tagDot}></span>
-            <span>Live · Panel Data (USD)</span>
           </div>
         </div>
 

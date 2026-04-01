@@ -7,6 +7,9 @@ import Layout from '../components/Layout';
 import LoadingSpinner from '../components/LoadingSpinner';
 import styles from './Wallet.module.css';
 
+/** User minimum withdrawal amount (USD). Admin panel bhi isi limit ko follow karta hai. */
+const MIN_WITHDRAW_USD = 10;
+
 function Wallet() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -116,14 +119,13 @@ function Wallet() {
     setAmountError('');
 
     const amountVal = parseFloat(amount || "0");
-    const minAmount = 10;
 
     if (isNaN(amountVal) || amountVal <= 0) {
       setAmountError("Sahi amount daalo.");
       return;
     }
-    if (amountVal < minAmount) {
-      setAmountError("Minimum withdraw amount $10.00 hai.");
+    if (amountVal < MIN_WITHDRAW_USD) {
+      setAmountError("Minimum withdraw amount $" + formatMoney(MIN_WITHDRAW_USD) + " hai.");
       return;
     }
     if (amountVal > walletState.currentBalance) {
@@ -263,7 +265,7 @@ function Wallet() {
               </div>
               <div className={styles.statValue}>$ {formatMoney(walletState.currentBalance)}</div>
               <div className={styles.statSub}>Itna amount abhi withdraw ke liye ready hai.</div>
-              <div className={styles.hint}>Minimum payout: <b>$ 10.00</b></div>
+              <div className={styles.hint}>Minimum payout: <b>$ {formatMoney(MIN_WITHDRAW_USD)}</b></div>
             </div>
           </div>
 
@@ -298,7 +300,7 @@ function Wallet() {
                 <span>Current balance se payout request bhejo.</span>
               </div>
               <span className={styles.badgeSoft}>
-                Min: $10.00 · Max: ${formatMoney(walletState.currentBalance)}
+                Min: ${formatMoney(MIN_WITHDRAW_USD)} · Max: ${formatMoney(walletState.currentBalance)}
               </span>
             </div>
 
@@ -309,13 +311,13 @@ function Wallet() {
                   id="amount"
                   type="number"
                   step="0.01"
-                  min="1"
+                  min={MIN_WITHDRAW_USD}
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   max={walletState.currentBalance}
                   required
                 />
-                <span className={styles.hintText}>Minimum: $10.00 – agar isse kam doge to request reject ho sakti hai.</span>
+                <span className={styles.hintText}>Minimum: ${formatMoney(MIN_WITHDRAW_USD)} – agar isse kam doge to request reject ho sakti hai.</span>
                 {amountError && <span className={styles.errorText} style={{ display: 'block' }}>{amountError}</span>}
               </div>
 
