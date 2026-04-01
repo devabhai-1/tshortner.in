@@ -1,5 +1,5 @@
 // Service Worker for TShortner PWA
-const CACHE_NAME = 'tshortner-v2';
+const CACHE_NAME = 'tshortner-v3';
 const urlsToCache = [
   '/',
   '/index.html',
