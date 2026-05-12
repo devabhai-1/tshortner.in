@@ -47,6 +47,7 @@
     0 8px 32px rgba(5, 150, 105, 0.5),
     0 0 60px rgba(5, 150, 105, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: slideDownBounce 0.4s ease-out, pwaGlowPulseLight 2s ease-in-out infinite;
 }
 
 .pwaIcon {
@@ -183,16 +184,18 @@
   }
 }
 
-[data-theme="light"] @keyframes glowPulse {
+@keyframes pwaGlowPulseLight {
   0%, 100% {
     box-shadow: 
       0 8px 32px rgba(5, 150, 105, 0.5),
-      0 0 60px rgba(5, 150, 105, 0.3);
+      0 0 60px rgba(5, 150, 105, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   50% {
     box-shadow: 
       0 10px 40px rgba(5, 150, 105, 0.7),
-      0 0 80px rgba(5, 150, 105, 0.5);
+      0 0 80px rgba(5, 150, 105, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
 }
 

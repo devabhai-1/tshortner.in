@@ -1,21 +1,10 @@
-import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import styles from './Navbar.module.css';
 
 function Navbar({ subtitle = 'Premium Dashboard' }) {
-  const { user, userName, logout } = useAuth();
+  const { userName, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
-  const location = useLocation();
-
-  const navLinks = [
-    { path: '/dashboard', label: 'Dashboard' },
-    { path: '/links', label: 'Links' },
-    { path: '/wallet', label: 'Wallet' },
-    { path: '/partnership/manage', label: 'Partnership' },
-    { path: '/profile/manage', label: 'Profile' },
-    { path: '/support/manage', label: 'Support' }
-  ];
 
   const handleLogout = async () => {
     try {
@@ -37,18 +26,6 @@ function Navbar({ subtitle = 'Premium Dashboard' }) {
             <span className={styles.brandSub}>{subtitle}</span>
           </div>
         </div>
-
-        <nav className={styles.navMenu}>
-          {navLinks.map(link => (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={`${styles.navLink} ${location.pathname === link.path ? styles.active : ''}`}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
 
         <div className={styles.navRight}>
           <button className={styles.themeToggle} onClick={toggleTheme} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}>

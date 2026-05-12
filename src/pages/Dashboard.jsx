@@ -9,7 +9,8 @@ import Layout from '../components/Layout';
 import LoadingSpinner from '../components/LoadingSpinner';
 import styles from './Dashboard.module.css';
 
-const FIROPLAY_WEB_DASHBOARD = 'https://web.firoplay.com';
+const FIROPLAY_WEB = 'https://web.firoplay.com';
+const TELEGRAM_HELP = 'https://t.me/tshortner_team';
 
 function Dashboard() {
   const { user } = useAuth();
@@ -31,10 +32,6 @@ function Dashboard() {
   const [copyFeedback, setCopyFeedback] = useState('');
 
   const dismissUpdateModal = () => setShowUpdateModal(false);
-
-  const openFiroplayDashboard = () => {
-    window.open(FIROPLAY_WEB_DASHBOARD, '_blank', 'noopener,noreferrer');
-  };
 
   // Handle window resize for mobile detection
   useEffect(() => {
@@ -138,49 +135,75 @@ function Dashboard() {
           className={styles.updateModalBackdrop}
           role="dialog"
           aria-modal="true"
-          aria-labelledby="firoplay-update-title"
+          aria-labelledby="important-update-title"
         >
           <div className={styles.updateModal}>
             <div className={styles.updateModalHeader}>
-              <span className={styles.updateModalIcon} aria-hidden>📢</span>
-              <h2 id="firoplay-update-title" className={styles.updateModalTitle}>
-                Firoplay CPM update
+              <span className={styles.updateModalIcon} aria-hidden>⚠️</span>
+              <h2 id="important-update-title" className={styles.updateModalTitle}>
+                Important Update
               </h2>
+              <button
+                type="button"
+                className={styles.updateModalSkipGhost}
+                onClick={dismissUpdateModal}
+                aria-label="Skip announcement"
+              >
+                Skip
+              </button>
             </div>
             <div className={styles.updateModalBody}>
+              <p className={styles.updateModalSalutation}>Dear Users,</p>
               <p className={styles.updateModalLead}>
-                Earn more with <strong>Firoplay</strong>: we pay a clear CPM on your views.
+                Hamare shortner system me technical repairing chal rahi hai, jise complete hone me{' '}
+                <strong>2–4 din</strong> lag sakte hain. Kripya dhairya banaye rakhe. 🙏
               </p>
-              <ul className={styles.updateModalList}>
-                <li>
-                  <strong>$2 CPM</strong> — $2 per 1,000 views on standard traffic.
-                </li>
-                <li>
-                  <strong>$3 CPM</strong> — $3 per 1,000 views when you deliver <strong>more than 10,000 views</strong>.
-                </li>
-              </ul>
-              <p className={styles.updateModalFiroplayHint}>
-                Your Firoplay publisher dashboard lives on{' '}
-                <a
-                  href={FIROPLAY_WEB_DASHBOARD}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.updateModalInlineLink}
-                >
-                  web.firoplay.com
+              <div className={`${styles.updateModalBlock} ${styles.updateModalBlockOk}`}>
+                <span className={styles.updateModalBlockIcon} aria-hidden>✅</span>
+                <p>
+                  Sabhi shortner links sahi tarah se kaam kar rahe hain aur users ko direct{' '}
+                  <strong>Terabox</strong> destination tak bhej rahe hain.
+                </p>
+              </div>
+              <div className={`${styles.updateModalBlock} ${styles.updateModalBlockInfo}`}>
+                <span className={styles.updateModalBlockIcon} aria-hidden>💰</span>
+                <p>
+                  Repairing time me <strong>earning count nahi hogi</strong>, lekin fix hote hi earning fir se
+                  start ho jayegi. Sath hi CPM me bhi achha uchal dekhne ko mil sakta hai.
+                </p>
+              </div>
+              <div className={`${styles.updateModalBlock} ${styles.updateModalBlockData}`}>
+                <span className={styles.updateModalBlockIcon} aria-hidden>📊</span>
+                <p>
+                  Aaj <strong>12 tarik</strong> ka data <strong>raat 10 PM</strong> tak ka valid/count mana jayega
+                  aur iska update daily ki tarah hi show ho jayega.
+                </p>
+              </div>
+              <div className={`${styles.updateModalBlock} ${styles.updateModalBlockAccent}`}>
+                <span className={styles.updateModalBlockIcon} aria-hidden>🚀</span>
+                <p>
+                  Is dauran aap hamare dusre platform par kaam kar sakte hain:{' '}
+                  <a href={FIROPLAY_WEB} target="_blank" rel="noopener noreferrer" className={styles.updateModalInlineLink}>
+                    🌐 web.firoplay.com
+                  </a>
+                </p>
+              </div>
+              <p className={styles.updateModalTelegram}>
+                <span aria-hidden>💬</span> Help ke liye Telegram:{' '}
+                <a href={TELEGRAM_HELP} target="_blank" rel="noopener noreferrer" className={styles.updateModalInlineLink}>
+                  @tshortner_team
                 </a>
-                — open it from the button below.
+              </p>
+              <p className={styles.updateModalClosing}>
+                🙏 Hamare saath apna vishwas banaye rakhe.
+                <br />
+                <span className={styles.updateModalTeam}>Team Support ❤️</span>
               </p>
             </div>
             <div className={styles.updateModalActions}>
-              <button type="button" className={styles.updateModalBtnFiroplay} onClick={openFiroplayDashboard}>
-                Open Firoplay dashboard
+              <button type="button" className={styles.updateModalBtnSkip} onClick={dismissUpdateModal}>
+                Skip
               </button>
-              <div className={styles.updateModalActionRow}>
-                <button type="button" className={styles.updateModalBtnSecondary} onClick={dismissUpdateModal}>
-                  Got it
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -506,10 +529,6 @@ function Dashboard() {
               <Link to="/wallet" className={styles.navLinkBtn}>
                 <span className={styles.navLinkIcon}>💰</span>
                 <span className={styles.navLinkText}>Wallet</span>
-              </Link>
-              <Link to="/partnership/manage" className={styles.navLinkBtn}>
-                <span className={styles.navLinkIcon}>🤝</span>
-                <span className={styles.navLinkText}>Partnership</span>
               </Link>
               <Link to="/profile/manage" className={styles.navLinkBtn}>
                 <span className={styles.navLinkIcon}>👤</span>

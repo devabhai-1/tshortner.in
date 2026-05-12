@@ -2,22 +2,8 @@ import Layout from '../components/Layout';
 import styles from './Support.module.css';
 
 function Support() {
-  const emailSupport = () => {
-    const mail = "support@shortnerpanel.com";
-    const subject = encodeURIComponent("Support Request - Shortner Panel");
-    const body = encodeURIComponent(
-      "Hi,\n\nMujhe panel me ek issue aa raha hai:\n\nDetails:\n- Email: \n- Problem: \n- Screenshot link (agar hai): \n\nThanks."
-    );
-    window.location.href = "mailto:" + mail + "?subject=" + subject + "&body=" + body;
-  };
-
   const telegramSupport = () => {
-    // apna real telegram bot / ID ka link yahan lagao
-    window.open("https://t.me/YourSupportBot", "_blank");
-  };
-
-  const openLink = (url) => {
-    window.open(url, "_blank");
+    window.open('https://t.me/TShortner_team', '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -35,26 +21,8 @@ function Support() {
           </div>
         </div>
 
-        {/* TOP SUPPORT CARDS: Email / Telegram / Social */}
+        {/* TOP SUPPORT CARDS: Telegram help + updates channel */}
         <section className={styles.supportGrid}>
-          {/* Email Support */}
-          <div className={styles.card}>
-            <div className={styles.cardTitle}>📧 Email Support</div>
-            <div className={styles.cardText}>
-              Technical issue, payout doubt ya panel bug – sab detail me email bhej sakte ho.
-              Screenshot attach karoge to aur easy ho jayega.
-            </div>
-            <div style={{ marginBottom: '0.5rem' }}>
-              <span className={styles.pill}>
-                <span className={styles.pillDot}></span>
-                support@shortnerpanel.com
-              </span>
-            </div>
-            <button className={styles.btnPrimary} type="button" onClick={emailSupport}>
-              <span>Write an Email</span>
-            </button>
-          </div>
-
           {/* Telegram Support */}
           <div className={styles.card}>
             <div className={styles.cardTitle}>🤖 Telegram Support</div>
@@ -72,31 +40,26 @@ function Support() {
             </button>
           </div>
 
-          {/* Social Buttons */}
+          {/* Official updates — Telegram channel only */}
           <div className={styles.card}>
-            <div className={styles.cardTitle}>🌐 Social & Updates</div>
+            <div className={styles.cardTitle}>📣 Channel &amp; updates</div>
             <div className={styles.cardText}>
-              Naye updates, maintenance notice, CPM changes – sab yahan announce honge.
+              Naye updates, maintenance notice aur CPM changes sirf is Telegram channel par announce honge.
+              Channel join karke notifications on rakho.
             </div>
-
-            <div>
-              <button className={styles.btnOutline} type="button" onClick={() => openLink('https://t.me/TShortner_team')}>
-                📣 Telegram Channel
-              </button>
-              <button className={styles.btnOutline} type="button" onClick={() => openLink('https://youtube.com/')}>
-                ▶️ YouTube
-              </button>
-              <button className={styles.btnOutline} type="button" onClick={() => openLink('https://x.com/')}>
-                ✖ X (Twitter)
-              </button>
-              <button className={styles.btnOutline} type="button" onClick={() => openLink('https://instagram.com/')}>
-                📸 Instagram
-              </button>
+            <div style={{ marginBottom: '0.5rem' }}>
+              <span className={styles.pill}>
+                <span className={styles.pillDot}></span>
+                t.me/Tshortner
+              </span>
             </div>
-
-            <p className={styles.note}>
-              Links abhi dummy hain – apne real channel / social URLs yahan dal dena.
-            </p>
+            <button
+              className={styles.btnPrimary}
+              type="button"
+              onClick={() => window.open('https://t.me/Tshortner', '_blank', 'noopener,noreferrer')}
+            >
+              <span>Telegram channel kholen</span>
+            </button>
           </div>
         </section>
 
@@ -130,7 +93,8 @@ function Support() {
           <div className={styles.faqItem}>
             <div className={styles.faqQ}>Q. Account ban problem ya login issue?</div>
             <div className={styles.faqA}>
-              Email support best hai, kyunki waha hum properly logs, IP details, device info check kar pate hain.
+              Telegram par apna panel email, last login time aur error ka screenshot bhejo — team logs aur device
+              side se help kar degi.
             </div>
           </div>
         </section>

@@ -1,29 +1,46 @@
 .container {
   min-height: 100vh;
-  background: radial-gradient(circle at top, #4f46e5, #020617);
-  padding: 2rem 1.5rem;
+  padding: 2rem max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  background:
+    radial-gradient(ellipse 90% 55% at 50% -12%, rgba(79, 70, 229, 0.38), transparent 52%),
+    linear-gradient(180deg, #030712 0%, #000000 100%);
+  color: var(--text-main);
+  transition: background 0.45s var(--ease-premium);
+}
+
+[data-theme="light"] .container {
+  background: linear-gradient(165deg, #f8fafc 0%, #e8edf3 42%, #f1f5f9 100%);
 }
 
 .content {
   max-width: 800px;
   margin: 0 auto;
-  background: rgba(15, 23, 42, 0.96);
-  border-radius: 1rem;
+  background: var(--card-bg);
+  border-radius: var(--radius-xl);
   padding: 2rem 2.5rem;
-  border: 1px solid rgba(31, 41, 55, 0.95);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
-  color: #f9fafb;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-card);
+  color: var(--text-main);
+  backdrop-filter: blur(14px) saturate(1.1);
+  transition: box-shadow 0.35s var(--ease-premium), border-color 0.25s ease;
+}
+
+[data-theme="light"] .content {
+  background: rgba(255, 255, 255, 0.97);
 }
 
 .content h1 {
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
-  color: #f9fafb;
+  color: var(--text-main);
+  font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .lastUpdated {
   font-size: 0.85rem;
-  color: #9ca3af;
+  color: var(--text-soft);
   margin-bottom: 2rem;
 }
 
@@ -34,13 +51,14 @@
 .content h2 {
   font-size: 1.2rem;
   margin-bottom: 0.75rem;
-  color: #e5e7eb;
+  color: var(--text-main);
+  font-weight: 700;
 }
 
 .content p {
   font-size: 0.95rem;
-  line-height: 1.7;
-  color: #d1d5db;
+  line-height: 1.75;
+  color: var(--text-soft);
   margin-bottom: 0.75rem;
 }
 
@@ -52,8 +70,8 @@
 
 .content li {
   font-size: 0.9rem;
-  line-height: 1.6;
-  color: #d1d5db;
+  line-height: 1.65;
+  color: var(--text-soft);
   margin-bottom: 0.5rem;
 }
 
@@ -62,18 +80,19 @@
   justify-content: space-between;
   margin-top: 3rem;
   padding-top: 1.5rem;
-  border-top: 1px solid rgba(55, 65, 81, 0.5);
+  border-top: 1px solid var(--card-border);
 }
 
 .footer a {
   font-size: 0.9rem;
-  color: #a5b4fc;
+  color: var(--accent);
   text-decoration: none;
-  transition: color 0.15s;
+  font-weight: 600;
+  transition: color 0.2s var(--ease-premium), opacity 0.2s ease;
 }
 
 .footer a:hover {
-  color: #e0e7ff;
+  opacity: 0.88;
 }
 
 @media (max-width: 768px) {

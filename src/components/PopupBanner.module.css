@@ -41,6 +41,7 @@
   box-shadow: 
     0 4px 20px rgba(5, 150, 105, 0.4),
     0 0 40px rgba(5, 150, 105, 0.2);
+  animation: slideDown 0.3s ease-out, popupGlowPulseLight 2s ease-in-out infinite;
 }
 
 .popupIcon {
@@ -133,7 +134,7 @@
   }
 }
 
-[data-theme="light"] @keyframes glowPulse {
+@keyframes popupGlowPulseLight {
   0%, 100% {
     box-shadow: 
       0 4px 20px rgba(5, 150, 105, 0.4),

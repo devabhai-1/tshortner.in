@@ -42,7 +42,6 @@ function Footer() {
             <li><Link to="/privacy">Privacy Policy</Link></li>
             <li><Link to="/terms">Terms & Conditions</Link></li>
             <li><Link to="/support">Support</Link></li>
-            <li><Link to="/partnership">Partnership</Link></li>
             <li><Link to="/profile">Profile</Link></li>
           </ul>
         </div>

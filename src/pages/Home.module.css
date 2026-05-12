@@ -612,19 +612,32 @@
 
 .card {
   background: var(--card-bg);
-  border-radius: 1.25rem;
+  border-radius: var(--radius-xl);
   padding: 2.2rem 2rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-card);
   border: 1px solid var(--card-border);
   backdrop-filter: blur(16px);
   text-align: center;
-  transition: all 0.3s ease;
+  transition:
+    transform 0.4s var(--ease-premium),
+    box-shadow 0.4s var(--ease-premium),
+    border-color 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card-hover);
 }
 
 [data-theme="light"] .card {
   background: #ffffff;
-  border: 2px solid rgba(217, 119, 6, 0.3);
-  box-shadow: 0 20px 50px rgba(30, 58, 138, 0.12);
+  border: 1px solid rgba(217, 119, 6, 0.28);
+  box-shadow: var(--shadow-card);
+}
+
+[data-theme="light"] .card:hover {
+  border-color: rgba(217, 119, 6, 0.4);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .logo {
@@ -1547,18 +1560,33 @@
 }
 
 .card {
-  background: rgba(15, 23, 42, 0.92);
-  border-radius: 1.25rem;
+  background: rgba(15, 23, 42, 0.94);
+  border-radius: var(--radius-xl);
   padding: 2.2rem 2rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(148, 163, 184, 0.3);
-  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow-card);
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  backdrop-filter: blur(20px) saturate(1.2);
+  transition:
+    transform 0.4s var(--ease-premium),
+    box-shadow 0.4s var(--ease-premium),
+    border-color 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(148, 163, 184, 0.35);
 }
 
 [data-theme="light"] .card {
   background: rgba(255, 255, 255, 0.98);
-  border: 2px solid rgba(217, 119, 6, 0.3);
-  box-shadow: 0 20px 40px rgba(30, 58, 138, 0.15);
+  border: 1px solid rgba(217, 119, 6, 0.28);
+  box-shadow: var(--shadow-card);
+}
+
+[data-theme="light"] .card:hover {
+  border-color: rgba(217, 119, 6, 0.42);
+  box-shadow: var(--shadow-card-hover);
 }
 
 .logo {

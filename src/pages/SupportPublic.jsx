@@ -3,15 +3,6 @@ import Footer from '../components/footer/Footer';
 import styles from './Support.module.css';
 
 function SupportPublic() {
-  const emailSupport = () => {
-    const mail = "support@tshortner.in";
-    const subject = encodeURIComponent("Support Request - TShortner");
-    const body = encodeURIComponent(
-      "Hi,\n\nMujhe panel me ek issue aa raha hai:\n\nDetails:\n- Email: \n- Problem: \n- Screenshot link (agar hai): \n\nThanks."
-    );
-    window.location.href = "mailto:" + mail + "?subject=" + subject + "&body=" + body;
-  };
-
   const telegramSupport = () => {
     window.open("https://t.me/tshortner", "_blank");
   };
@@ -27,24 +18,6 @@ function SupportPublic() {
       <div className={styles.mainInner}>
         {/* Support Cards */}
         <section className={styles.supportGrid}>
-          {/* Email Support */}
-          <div className={styles.card}>
-            <div className={styles.cardTitle}>📧 Email Support</div>
-            <div className={styles.cardText}>
-              Technical issue, payout doubt ya panel bug – sab detail me email bhej sakte ho.
-              Screenshot attach karoge to aur easy ho jayega.
-            </div>
-            <div style={{ marginBottom: '0.5rem' }}>
-              <span className={styles.pill}>
-                <span className={styles.pillDot}></span>
-                support@tshortner.in
-              </span>
-            </div>
-            <button className={styles.cardButton} onClick={emailSupport}>
-              Open Email Client
-            </button>
-          </div>
-
           {/* Telegram Support */}
           <div className={styles.card}>
             <div className={styles.cardTitle}>💬 Telegram Support</div>
