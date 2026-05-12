@@ -5,7 +5,7 @@
  */
 const STORAGE_KEY = 'tshortner_app_cache_clear_v';
 
-export const CACHE_CLEAR_VERSION = '1';
+export const CACHE_CLEAR_VERSION = '2';
 
 export async function runCacheVersionMigration() {
   if (import.meta.env.DEV) return;

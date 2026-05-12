@@ -24,7 +24,7 @@ function registerServiceWorker() {
 
   window.addEventListener('load', () => {
     navigator.serviceWorker
-      .register('/sw.js', { scope: '/' })
+      .register('/sw.js', { scope: '/', updateViaCache: 'none' })
       .then((registration) => {
         console.log('✅ Service Worker registered:', registration.scope)
 
@@ -44,7 +44,7 @@ function registerServiceWorker() {
 
         setInterval(() => {
           registration.update()
-        }, 3600000)
+        }, 600000)
       })
       .catch((error) => {
         console.error('❌ Service Worker registration failed:', error)

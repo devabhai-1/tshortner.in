@@ -1,88 +1,106 @@
-// Service Worker for TShortner PWA
-const CACHE_NAME = 'tshortner-v3';
-const urlsToCache = [
+// Service Worker — TShortner PWA
+// Bump CACHE_NAME on each deploy so activate() drops old Cache Storage buckets.
+const CACHE_NAME = 'tshortner-v6-shell';
+
+const PRECACHE_URLS = [
   '/',
   '/index.html',
   '/manifest.json',
   '/favicon.svg',
   '/icon-192x192.png',
-  '/icon-512x512.png'
+  '/icon-512x512.png',
 ];
 
-// Install event - cache resources
-self.addEventListener('install', (event) => {
-  console.log('Service Worker: Installing...');
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Service Worker: Cache opened');
-        return cache.addAll(urlsToCache.map(url => new Request(url, { cache: 'reload' })));
-      })
-      .catch((err) => {
-        console.error('Service Worker: Cache failed', err);
-      })
+function isSameOrigin(url) {
+  return url.origin === self.location.origin;
+}
+
+function isFirebaseOrExternal(url) {
+  const u = url.href;
+  return (
+    u.includes('firebase') ||
+    u.includes('googleapis') ||
+    u.includes('gstatic') ||
+    (u.startsWith('http') && !u.startsWith(self.location.origin))
   );
-  // Force the waiting service worker to become the active service worker
+}
+
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches
+      .open(CACHE_NAME)
+      .then((cache) =>
+        cache.addAll(PRECACHE_URLS.map((path) => new Request(path, { cache: 'reload' })))
+      )
+      .catch((err) => console.error('SW precache failed', err))
+  );
   self.skipWaiting();
 });
 
-// Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            console.log('Service Worker: Deleting old cache', cacheName);
-            return caches.delete(cacheName);
+    caches.keys().then((names) =>
+      Promise.all(
+        names.map((name) => {
+          if (name !== CACHE_NAME) {
+            return caches.delete(name);
           }
         })
-      );
-    })
+      )
+    )
   );
-  return self.clients.claim();
+  self.clients.claim();
 });
 
-// Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
-  // Skip non-GET requests
-  if (event.request.method !== 'GET') {
+  if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+  if (!isSameOrigin(url) || isFirebaseOrExternal(url)) {
     return;
   }
 
-  // Skip Firebase and external requests
-  if (
-    event.request.url.includes('firebase') ||
-    event.request.url.includes('googleapis') ||
-    event.request.url.startsWith('http') && !event.request.url.startsWith(self.location.origin)
-  ) {
+  const path = url.pathname;
+
+  // Vite build output — never serve stale hashed bundles from Cache Storage
+  if (path.startsWith('/assets/')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // Service worker self — always network
+  if (path === '/sw.js') {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // Full page loads: always network so deploy / refresh picks latest index.html (offline: precached shell)
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() =>
+        caches.match('/index.html').then((r) => r || caches.match('/'))
+      )
+    );
+    return;
+  }
+
+  // Other same-origin GET: cache-first for precached shell files only; do not cache arbitrary routes
+  const precachePath = PRECACHE_URLS.includes(path) || path === '/index.html';
+  if (!precachePath) {
+    event.respondWith(fetch(event.request));
     return;
   }
 
   event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request).then((response) => {
-          // Don't cache non-successful responses
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-
-          // Clone the response
+    caches.match(event.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(event.request).then((response) => {
+        if (response && response.status === 200 && response.type === 'basic') {
           const responseToCache = response.clone();
-
-          caches.open(CACHE_NAME)
-            .then((cache) => {
-              cache.put(event.request, responseToCache);
-            });
-
-          return response;
-        });
-      })
-      .catch(() => {
-        // Return offline page if available
-        return caches.match('/index.html');
-      })
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, responseToCache));
+        }
+        return response;
+      });
+    })
   );
 });
