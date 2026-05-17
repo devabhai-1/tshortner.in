@@ -9,8 +9,43 @@ import Layout from '../components/Layout';
 import LoadingSpinner from '../components/LoadingSpinner';
 import styles from './Dashboard.module.css';
 
-const FIROPLAY_WEB = 'https://web.firoplay.com';
 const TELEGRAM_HELP = 'https://t.me/tshortner_team';
+const TELEGRAM_CHANNEL = 'https://t.me/tshortner';
+
+const UPDATE_MODAL_COPY = {
+  hi: {
+    title: 'Khushkhabri',
+    skip: 'Skip',
+    skipAria: 'Announcement skip karein',
+    salutation: 'Dear Users,',
+    lead:
+      'Aaj dopahar 1 baje se tshortner ko dubara start kar diya gaya hai. Aap vapas se apna kaam shuru kar sakte hain.',
+    fixed:
+      'Umeed hai jo problem thi woh fix ho gayi hai. Ab earning aur shortner links normal tarike se kaam karenge.',
+    withdrawal:
+      'Jo withdrawal har baar mahine ki 15 tarikh ko milta tha, ab 24 tarikh ko milega.',
+    telegramHelp: 'Help ke liye Telegram Support:',
+    telegramChannel: 'Official Telegram Channel:',
+    closing: 'Hamare saath apna vishwas banaye rakhe.',
+    team: 'Team Support ❤️',
+  },
+  en: {
+    title: 'Good News',
+    skip: 'Skip',
+    skipAria: 'Skip announcement',
+    salutation: 'Dear Users,',
+    lead:
+      'tshortner has been restarted today from 1 PM. You can resume your work again.',
+    fixed:
+      'We hope the problems are fixed. Earnings and shortener links should work normally now.',
+    withdrawal:
+      'Withdrawal that used to be processed on the 15th of each month will now be on the 24th.',
+    telegramHelp: 'Telegram Support for help:',
+    telegramChannel: 'Official Telegram Channel:',
+    closing: 'Thank you for staying with us.',
+    team: 'Team Support ❤️',
+  },
+};
 
 function Dashboard() {
   const { user } = useAuth();
@@ -29,7 +64,10 @@ function Dashboard() {
   const [yesterdayEarning, setYesterdayEarning] = useState(0);
   /* Shown on every Dashboard visit / full refresh; only this page uses this modal. */
   const [showUpdateModal, setShowUpdateModal] = useState(true);
+  const [updateModalLang, setUpdateModalLang] = useState('hi');
   const [copyFeedback, setCopyFeedback] = useState('');
+
+  const modalCopy = UPDATE_MODAL_COPY[updateModalLang];
 
   const dismissUpdateModal = () => setShowUpdateModal(false);
 
@@ -139,70 +177,74 @@ function Dashboard() {
         >
           <div className={styles.updateModal}>
             <div className={styles.updateModalHeader}>
-              <span className={styles.updateModalIcon} aria-hidden>⚠️</span>
+              <span className={styles.updateModalIcon} aria-hidden>✅</span>
               <h2 id="important-update-title" className={styles.updateModalTitle}>
-                Important Update
+                {modalCopy.title}
               </h2>
+              <div className={styles.updateModalLangToggle} role="group" aria-label="Announcement language">
+                <button
+                  type="button"
+                  className={`${styles.updateModalLangBtn} ${updateModalLang === 'hi' ? styles.updateModalLangBtnActive : ''}`}
+                  onClick={() => setUpdateModalLang('hi')}
+                  aria-pressed={updateModalLang === 'hi'}
+                >
+                  HI
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.updateModalLangBtn} ${updateModalLang === 'en' ? styles.updateModalLangBtnActive : ''}`}
+                  onClick={() => setUpdateModalLang('en')}
+                  aria-pressed={updateModalLang === 'en'}
+                >
+                  EN
+                </button>
+              </div>
               <button
                 type="button"
                 className={styles.updateModalSkipGhost}
                 onClick={dismissUpdateModal}
-                aria-label="Skip announcement"
+                aria-label={modalCopy.skipAria}
               >
-                Skip
+                {modalCopy.skip}
               </button>
             </div>
             <div className={styles.updateModalBody}>
-              <p className={styles.updateModalSalutation}>Dear Users,</p>
-              <p className={styles.updateModalLead}>
-                Hamare shortner system me technical repairing chal rahi hai, jise complete hone me{' '}
-                <strong>2–4 din</strong> lag sakte hain. Kripya dhairya banaye rakhe. 🙏
-              </p>
+              <p className={styles.updateModalSalutation}>{modalCopy.salutation}</p>
+              <p className={styles.updateModalLead}>{modalCopy.lead}</p>
               <div className={`${styles.updateModalBlock} ${styles.updateModalBlockOk}`}>
                 <span className={styles.updateModalBlockIcon} aria-hidden>✅</span>
-                <p>
-                  Sabhi shortner links sahi tarah se kaam kar rahe hain aur users ko direct{' '}
-                  <strong>Terabox</strong> destination tak bhej rahe hain.
-                </p>
+                <p>{modalCopy.fixed}</p>
               </div>
               <div className={`${styles.updateModalBlock} ${styles.updateModalBlockInfo}`}>
                 <span className={styles.updateModalBlockIcon} aria-hidden>💰</span>
-                <p>
-                  Repairing time me <strong>earning count nahi hogi</strong>, lekin fix hote hi earning fir se
-                  start ho jayegi. Sath hi CPM me bhi achha uchal dekhne ko mil sakta hai.
-                </p>
-              </div>
-              <div className={`${styles.updateModalBlock} ${styles.updateModalBlockData}`}>
-                <span className={styles.updateModalBlockIcon} aria-hidden>📊</span>
-                <p>
-                  Aaj <strong>12 tarik</strong> ka data <strong>raat 10 PM</strong> tak ka valid/count mana jayega
-                  aur iska update daily ki tarah hi show ho jayega.
-                </p>
-              </div>
-              <div className={`${styles.updateModalBlock} ${styles.updateModalBlockAccent}`}>
-                <span className={styles.updateModalBlockIcon} aria-hidden>🚀</span>
-                <p>
-                  Is dauran aap hamare dusre platform par kaam kar sakte hain:{' '}
-                  <a href={FIROPLAY_WEB} target="_blank" rel="noopener noreferrer" className={styles.updateModalInlineLink}>
-                    🌐 web.firoplay.com
-                  </a>
-                </p>
+                <p>{modalCopy.withdrawal}</p>
               </div>
               <p className={styles.updateModalTelegram}>
-                <span aria-hidden>💬</span> Help ke liye Telegram:{' '}
+                <span aria-hidden>💬</span> {modalCopy.telegramHelp}{' '}
                 <a href={TELEGRAM_HELP} target="_blank" rel="noopener noreferrer" className={styles.updateModalInlineLink}>
                   @tshortner_team
                 </a>
               </p>
+              <p className={styles.updateModalTelegram}>
+                <span aria-hidden>📢</span> {modalCopy.telegramChannel}{' '}
+                <a
+                  href={TELEGRAM_CHANNEL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.updateModalInlineLink}
+                >
+                  @tshortner
+                </a>
+              </p>
               <p className={styles.updateModalClosing}>
-                🙏 Hamare saath apna vishwas banaye rakhe.
+                🙏 {modalCopy.closing}
                 <br />
-                <span className={styles.updateModalTeam}>Team Support ❤️</span>
+                <span className={styles.updateModalTeam}>{modalCopy.team}</span>
               </p>
             </div>
             <div className={styles.updateModalActions}>
               <button type="button" className={styles.updateModalBtnSkip} onClick={dismissUpdateModal}>
-                Skip
+                {modalCopy.skip}
               </button>
             </div>
           </div>

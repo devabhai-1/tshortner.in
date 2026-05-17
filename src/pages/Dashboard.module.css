@@ -32,11 +32,52 @@
   flex-shrink: 0;
   padding: 0.85rem 1rem 0.85rem 1.15rem;
   border-bottom: 1px solid var(--card-border);
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.12) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.14) 0%, transparent 100%);
 }
 
 [data-theme="light"] .updateModalHeader {
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.15) 0%, transparent 100%);
+  background: linear-gradient(180deg, rgba(34, 197, 94, 0.16) 0%, transparent 100%);
+}
+
+.updateModalLangToggle {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.2rem;
+  padding: 0.15rem;
+  border-radius: 0.45rem;
+  border: 1px solid var(--card-border);
+  background: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .updateModalLangToggle {
+  background: rgba(15, 23, 42, 0.05);
+}
+
+.updateModalLangBtn {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.3rem 0.45rem;
+  border: none;
+  border-radius: 0.32rem;
+  cursor: pointer;
+  background: transparent;
+  color: var(--text-soft);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.updateModalLangBtn:hover {
+  color: var(--text-main);
+}
+
+.updateModalLangBtnActive {
+  background: rgba(34, 197, 94, 0.22);
+  color: var(--text-main);
+}
+
+[data-theme="light"] .updateModalLangBtnActive {
+  background: rgba(34, 197, 94, 0.2);
+  color: #0f172a;
 }
 
 .updateModalIcon {
