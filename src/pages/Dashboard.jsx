@@ -14,35 +14,35 @@ const TELEGRAM_CHANNEL = 'https://t.me/tshortner';
 
 const UPDATE_MODAL_COPY = {
   hi: {
-    title: 'Khushkhabri',
+    title: 'Zaroori Update',
     skip: 'Skip',
     skipAria: 'Announcement skip karein',
     salutation: 'Dear Users,',
     lead:
-      'Aaj dopahar 1 baje se tshortner ko dubara start kar diya gaya hai. Aap vapas se apna kaam shuru kar sakte hain.',
-    fixed:
-      'Umeed hai jo problem thi woh fix ho gayi hai. Ab earning aur shortner links normal tarike se kaam karenge.',
-    withdrawal:
-      'Jo withdrawal har baar mahine ki 15 tarikh ko milta tha, ab 24 tarikh ko milega.',
+      '19 May ko shaam 5 baje problem dobara dikhne ko mili hai. Team is par kaam kar rahi hai.',
+    redirect:
+      'Is wajah se abhi shortner users ko original link par bhej raha hai (short redirect route ki jagah).',
+    teraboxSafe:
+      'Aapka Terabox link bilkul safe hai — iska koi nuksan nahi hai. Shortener abhi aapke original Terabox link par hi redirect kar raha hai.',
     telegramHelp: 'Help ke liye Telegram Support:',
     telegramChannel: 'Official Telegram Channel:',
-    closing: 'Hamare saath apna vishwas banaye rakhe.',
+    closing: 'Jaldi fix hone par update channel par milega. Dhairya rakhein.',
     team: 'Team Support ❤️',
   },
   en: {
-    title: 'Good News',
+    title: 'Important Update',
     skip: 'Skip',
     skipAria: 'Skip announcement',
     salutation: 'Dear Users,',
     lead:
-      'tshortner has been restarted today from 1 PM. You can resume your work again.',
-    fixed:
-      'We hope the problems are fixed. Earnings and shortener links should work normally now.',
-    withdrawal:
-      'Withdrawal that used to be processed on the 15th of each month will now be on the 24th.',
+      'The issue has appeared again on 19 May at 5 PM. Our team is working on it.',
+    redirect:
+      'For now, the shortener is sending users to the original link (not via the short redirect route).',
+    teraboxSafe:
+      'Your Terabox link is completely safe — no harm done. The shortener is currently redirecting to your original Terabox link.',
     telegramHelp: 'Telegram Support for help:',
     telegramChannel: 'Official Telegram Channel:',
-    closing: 'Thank you for staying with us.',
+    closing: 'We will post updates on the channel once fixed. Thank you for your patience.',
     team: 'Team Support ❤️',
   },
 };
@@ -177,7 +177,7 @@ function Dashboard() {
         >
           <div className={styles.updateModal}>
             <div className={styles.updateModalHeader}>
-              <span className={styles.updateModalIcon} aria-hidden>✅</span>
+              <span className={styles.updateModalIcon} aria-hidden>⚠️</span>
               <h2 id="important-update-title" className={styles.updateModalTitle}>
                 {modalCopy.title}
               </h2>
@@ -211,13 +211,13 @@ function Dashboard() {
             <div className={styles.updateModalBody}>
               <p className={styles.updateModalSalutation}>{modalCopy.salutation}</p>
               <p className={styles.updateModalLead}>{modalCopy.lead}</p>
+              <div className={`${styles.updateModalBlock} ${styles.updateModalBlockInfo}`}>
+                <span className={styles.updateModalBlockIcon} aria-hidden>🔗</span>
+                <p>{modalCopy.redirect}</p>
+              </div>
               <div className={`${styles.updateModalBlock} ${styles.updateModalBlockOk}`}>
                 <span className={styles.updateModalBlockIcon} aria-hidden>✅</span>
-                <p>{modalCopy.fixed}</p>
-              </div>
-              <div className={`${styles.updateModalBlock} ${styles.updateModalBlockInfo}`}>
-                <span className={styles.updateModalBlockIcon} aria-hidden>💰</span>
-                <p>{modalCopy.withdrawal}</p>
+                <p>{modalCopy.teraboxSafe}</p>
               </div>
               <p className={styles.updateModalTelegram}>
                 <span aria-hidden>💬</span> {modalCopy.telegramHelp}{' '}
