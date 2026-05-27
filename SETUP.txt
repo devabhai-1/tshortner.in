@@ -1,0 +1,92 @@
+🔥 QUICK SETUP GUIDE
+====================
+
+⚠️ BEFORE RUNNING THE APP - CONFIGURE FIREBASE WITH ENV VARIABLES!
+
+Step 1: Create .env File
+-------------------------
+1. In the react-app folder, copy .env.example to .env:
+   
+   Windows PowerShell:
+   Copy-Item .env.example .env
+   
+   Mac/Linux:
+   cp .env.example .env
+
+2. The .env file is in .gitignore and will NEVER be committed to git
+   (This keeps your Firebase config private!)
+
+Step 2: Get Your Firebase Config
+---------------------------------
+1. Go to: https://console.firebase.google.com/
+2. Select/Create your project
+3. Click ⚙️ (Project Settings)
+4. Scroll to "Your apps" → Web app
+5. Copy each config value
+
+Step 3: Fill in .env File
+--------------------------
+Open the .env file and replace with YOUR actual values:
+
+VITE_FIREBASE_API_KEY=AIzaSyXXXXXXXXXXXXXXXXXX
+VITE_FIREBASE_AUTH_DOMAIN=your-project.firebaseapp.com
+VITE_FIREBASE_DATABASE_URL=https://your-project-default-rtdb.firebaseio.com
+VITE_FIREBASE_PROJECT_ID=your-project-id
+VITE_FIREBASE_STORAGE_BUCKET=your-project.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=123456789012
+VITE_FIREBASE_APP_ID=1:123456789012:web:xxxxxxxxxxxxx
+
+⚠️ IMPORTANT: 
+- No quotes needed around values
+- No spaces around the = sign
+- Must include databaseURL (required for Realtime Database)
+
+Step 4: Enable Firebase Services
+---------------------------------
+In Firebase Console:
+
+✅ Authentication → Sign-in method:
+   - Enable "Email/Password"
+   - Enable "Google"
+
+✅ Realtime Database → Create Database:
+   - Start in test mode (or use rules from README)
+   - Note the database URL (you need this!)
+
+Step 5: Install & Run
+---------------------
+cd react-app
+npm install
+npm run dev
+
+That's it! App will open at http://localhost:5173
+
+---
+
+🔒 SECURITY NOTES:
+------------------
+✅ .env file is in .gitignore (won't be committed)
+✅ Environment variables keep config out of source code
+✅ Firebase values are protected by Security Rules, not by hiding them
+✅ This is the standard industry practice for React apps
+
+---
+
+COMMON ERRORS & FIXES:
+----------------------
+
+❌ "Missing Firebase environment variables"
+   FIX: Create .env file from .env.example and fill in all values
+
+❌ "Cannot parse Firebase url"
+   FIX: Add VITE_FIREBASE_DATABASE_URL in .env (must end with .firebaseio.com)
+
+❌ "Permission denied"
+   FIX: Check Realtime Database rules (see README.md)
+
+❌ Changes to .env not working
+   FIX: Restart dev server (npm run dev) after changing .env
+
+---
+
+For complete documentation, see README.md

@@ -1,0 +1,444 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+  --ease-premium: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Light Theme (White with Premium Colors Mix) - Default */
+[data-theme="light"] {
+  --bg-main: #ffffff;
+  --bg-card: #ffffff;
+  --bg-soft: #f8fafc;
+  --border-soft: rgba(217, 119, 6, 0.4);
+  --text-main: #0f172a;
+  --text-soft: #1e293b;
+  --accent: #d97706;
+  --accent-soft: rgba(217, 119, 6, 0.15);
+  --green: #059669;
+  --green-soft: rgba(5, 150, 105, 0.2);
+  --red: #dc2626;
+  --gradient-start: #f8fafc;
+  --gradient-end: #e2e8f0;
+  --card-bg: #ffffff;
+  --card-border: rgba(217, 119, 6, 0.3);
+  --hover-bg: rgba(217, 119, 6, 0.08);
+  --gold: #d97706;
+  --gold-light: #f59e0b;
+  --navy: #1e3a8a;
+  --emerald: #059669;
+  --royal-blue: #1e40af;
+  --glow: rgba(217, 119, 6, 0.3);
+  --premium-shadow: 0 20px 60px rgba(30, 58, 138, 0.12);
+  --bg-overlay: rgba(248, 250, 252, 0.95);
+  --shadow-card: 0 1px 2px rgba(15, 23, 42, 0.04), 0 18px 42px -14px rgba(30, 58, 138, 0.14);
+  --shadow-card-hover: 0 4px 12px rgba(15, 23, 42, 0.06), 0 26px 52px -16px rgba(30, 58, 138, 0.2);
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-main: #030303;
+  --bg-card: #0c0c0f;
+  --bg-soft: #0f0f12;
+  --border-soft: rgba(255, 255, 255, 0.08);
+  --text-main: #f4f4f5;
+  --text-soft: #a1a1aa;
+  --accent: #60a5fa;
+  --accent-soft: rgba(96, 165, 250, 0.14);
+  --green: #4ade80;
+  --green-soft: rgba(74, 222, 128, 0.12);
+  --red: #f87171;
+  --gradient-start: #050508;
+  --gradient-end: #000000;
+  --card-bg: rgba(16, 16, 20, 0.94);
+  --card-border: rgba(255, 255, 255, 0.09);
+  --hover-bg: rgba(255, 255, 255, 0.05);
+  --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.06), 0 22px 48px rgba(0, 0, 0, 0.55);
+  --shadow-card-hover: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 28px 56px rgba(0, 0, 0, 0.62);
+  --premium-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at top, var(--gradient-start), var(--gradient-end));
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  transition: background 0.35s var(--ease-premium), color 0.25s ease;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+[data-theme="dark"] body {
+  background:
+    radial-gradient(ellipse 100% 70% at 50% -15%, rgba(59, 130, 246, 0.14), transparent 52%),
+    radial-gradient(ellipse 60% 45% at 100% 30%, rgba(139, 92, 246, 0.1), transparent 50%),
+    linear-gradient(165deg, #070708 0%, #000000 55%, #050508 100%);
+  background-attachment: fixed;
+}
+
+/* Make text darker and bolder for light theme */
+[data-theme="light"] body {
+  font-weight: 500;
+  color: #0f172a;
+}
+
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+  color: #0f172a;
+  font-weight: 700;
+}
+
+[data-theme="light"] p,
+[data-theme="light"] span,
+[data-theme="light"] div {
+  color: #1e293b;
+  font-weight: 500;
+}
+
+/* Ensure all text elements have proper contrast in white theme */
+[data-theme="light"] * {
+  color: inherit;
+}
+
+[data-theme="light"] label {
+  color: #0f172a !important;
+  font-weight: 600;
+}
+
+[data-theme="light"] input,
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+  color: #0f172a !important;
+  background: #ffffff !important;
+}
+
+[data-theme="light"] input::placeholder,
+[data-theme="light"] textarea::placeholder {
+  color: #94a3b8 !important;
+  opacity: 0.7;
+}
+
+/* Light theme - White with Premium Color Accents */
+[data-theme="light"] body {
+  background: linear-gradient(135deg, 
+    #f8fafc 0%, 
+    #f1f5f9 25%, 
+    #e2e8f0 50%, 
+    #f1f5f9 75%, 
+    #f8fafc 100%);
+  background-size: 400% 400%;
+  animation: whiteGradient 25s ease infinite;
+  background-attachment: fixed;
+  position: relative;
+}
+
+[data-theme="light"] body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 15% 30%, rgba(217, 119, 6, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 85% 70%, rgba(30, 58, 138, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(5, 150, 105, 0.06) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes whiteGradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+code {
+  font-family: 'Courier New', monospace;
+  background: var(--accent-soft);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.3rem;
+  font-size: 0.9em;
+  color: var(--text-main);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+}
+
+input, select, textarea {
+  font-family: inherit;
+}
+
+/* Premium buttons for light theme */
+[data-theme="light"] button.btn-primary,
+[data-theme="light"] .btn-primary {
+  background: linear-gradient(135deg, #d97706, #f59e0b, #059669);
+  box-shadow: 0 8px 25px rgba(217, 119, 6, 0.5), 0 0 30px rgba(5, 150, 105, 0.3);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(217, 119, 6, 0.3);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+[data-theme="light"] button.btn-primary:hover,
+[data-theme="light"] .btn-primary:hover {
+  background: linear-gradient(135deg, #f59e0b, #d97706, #047857);
+  box-shadow: 0 12px 35px rgba(217, 119, 6, 0.7), 0 0 50px rgba(5, 150, 105, 0.5);
+  transform: translateY(-3px);
+  border-color: rgba(217, 119, 6, 0.5);
+}
+
+/* Premium input focus for light theme */
+[data-theme="light"] input:focus,
+[data-theme="light"] select:focus,
+[data-theme="light"] textarea:focus {
+  border-color: #d97706;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2), 0 0 0 6px rgba(30, 58, 138, 0.1);
+  outline: none;
+}
+
+/* ========================================
+   RESPONSIVE OPTIMIZATIONS - MOBILE & DESKTOP
+   ======================================== */
+
+/* Base Responsive Settings */
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Mobile-First Optimizations */
+@media (max-width: 768px) {
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  
+  /* Touch-friendly tap targets */
+  button, a, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent zoom on input focus (iOS) */
+  input[type="color"],
+  input[type="date"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="email"],
+  input[type="month"],
+  input[type="number"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="text"],
+  input[type="time"],
+  input[type="url"],
+  input[type="week"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Better scrolling on mobile */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Tablet Optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+/* Desktop Optimizations */
+@media (min-width: 1025px) {
+  body {
+    font-size: 16px;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Large Desktop Optimizations */
+@media (min-width: 1440px) {
+  body {
+    font-size: 16px;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-width: 896px) and (orientation: landscape) {
+  body {
+    font-size: 16px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+  
+  thead {
+    display: table-header-group;
+  }
+  
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+  
+  img {
+    max-width: 100% !important;
+  }
+  
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Accessibility - High Contrast Mode */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor;
+  }
+}
+
+/* Dark Mode Preference (if system prefers dark) */
+@media (prefers-color-scheme: dark) {
+  /* This is handled by your theme system, but can add system preference support here if needed */
+}
+
+/* Focus Visible for Keyboard Navigation */
+*:focus-visible {
+  outline: 2px solid var(--accent, #3b82f6);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Selection Styling */
+::selection {
+  background-color: rgba(59, 130, 246, 0.25);
+  color: inherit;
+}
+
+[data-theme="light"] ::selection {
+  background-color: rgba(217, 119, 6, 0.3);
+  color: inherit;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+/* Scrollbar Styling (Webkit browsers) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-soft, #0f172a);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-soft, #1f2937);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent, #3b82f6);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(217, 119, 6, 0.4);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(217, 119, 6, 0.6);
+}
