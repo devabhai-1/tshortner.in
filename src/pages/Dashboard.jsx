@@ -10,8 +10,6 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import DashboardGateModals from '../components/DashboardGateModals';
 import styles from './Dashboard.module.css';
 
-const MAINTENANCE_NOTICE_KEY = 'tshortner.maintenance.notice.v1';
-
 function Dashboard() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -19,13 +17,7 @@ function Dashboard() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [telegramUsername, setTelegramUsername] = useState('');
   const [profileChecked, setProfileChecked] = useState(false);
-  const [maintenanceDismissed, setMaintenanceDismissed] = useState(() => {
-    try {
-      return sessionStorage.getItem(MAINTENANCE_NOTICE_KEY) === '1';
-    } catch {
-      return false;
-    }
-  });
+  const [maintenanceDismissed, setMaintenanceDismissed] = useState(false);
   const [stats, setStats] = useState({
     dailyEarning: 0,
     dailyCPM: 0,
@@ -138,11 +130,6 @@ function Dashboard() {
 
   const handleDismissMaintenance = useCallback(() => {
     setMaintenanceDismissed(true);
-    try {
-      sessionStorage.setItem(MAINTENANCE_NOTICE_KEY, '1');
-    } catch {
-      /* ignore */
-    }
   }, []);
 
   const chartDataLast10 = useMemo(() => {
