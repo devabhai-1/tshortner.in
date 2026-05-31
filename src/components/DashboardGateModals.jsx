@@ -100,12 +100,36 @@ export default function DashboardGateModals({
               </span>
               <h3 id="maintenance-title">TShortner — Important Notice</h3>
             </div>
-            <p className={styles.noticeText}>
-              <strong>TShortner is temporarily unavailable.</strong> Our team is working on a fix.
-              Thank you for your patience while we resolve this.
-            </p>
+
+            <div className={styles.noticeBlock}>
+              <p className={styles.noticeLang}>English</p>
+              <p className={styles.noticeText}>
+                <strong>TShortner is temporarily unavailable.</strong> Our team is working on a fix.
+                Thank you for your patience while we resolve this.
+              </p>
+              <p className={styles.noticeText}>
+                During this period, your short links are being sent to the{' '}
+                <strong>original destination</strong>. You will <strong>not earn</strong> on our
+                platform until service is restored.
+              </p>
+            </div>
+
+            <div className={styles.noticeDivider} aria-hidden />
+
+            <div className={styles.noticeBlock}>
+              <p className={styles.noticeLang}>हिंदी</p>
+              <p className={styles.noticeText}>
+                <strong>TShortner abhi temporarily band hai.</strong> Hamari team ise theek kar rahi
+                hai. Kripya dhairya banaye rakhein.
+              </p>
+              <p className={styles.noticeText}>
+                Is samay aapke links <strong>original link</strong> par bheje ja rahe hain. Service
+                wapas shuru hone tak hamare platform par <strong>koi kamai nahi hogi</strong>.
+              </p>
+            </div>
+
             <button type="button" className={styles.secondaryBtn} onClick={onDismissMaintenance}>
-              Got it
+              Got it / Samajh gaya
             </button>
           </div>
         ) : null}
