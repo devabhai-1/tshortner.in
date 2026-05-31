@@ -6,6 +6,13 @@
   width: 100%;
 }
 
+.mainBlocked {
+  pointer-events: none;
+  user-select: none;
+  filter: blur(2px);
+  opacity: 0.45;
+}
+
 .loading {
   text-align: center;
   padding: 3rem;

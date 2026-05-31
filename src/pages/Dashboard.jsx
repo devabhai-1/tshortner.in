@@ -1,19 +1,31 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ref, get } from 'firebase/database';
+import { ref, get, update } from 'firebase/database';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import { emailToKey, formatMoney, formatNumber, formatDateLabel } from '../firebase/utils';
 import { ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
 import Layout from '../components/Layout';
 import LoadingSpinner from '../components/LoadingSpinner';
+import DashboardGateModals from '../components/DashboardGateModals';
 import styles from './Dashboard.module.css';
+
+const LINKIPLAY_NOTICE_KEY = 'tshortner.linkiplay.notice.v1';
 
 function Dashboard() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [telegramUsername, setTelegramUsername] = useState('');
+  const [profileChecked, setProfileChecked] = useState(false);
+  const [linkiplayDismissed, setLinkiplayDismissed] = useState(() => {
+    try {
+      return sessionStorage.getItem(LINKIPLAY_NOTICE_KEY) === '1';
+    } catch {
+      return false;
+    }
+  });
   const [stats, setStats] = useState({
     dailyEarning: 0,
     dailyCPM: 0,
@@ -48,12 +60,16 @@ function Dashboard() {
 
         if (!snap.exists()) {
           setError('Database node nahi mila. Pehle signup page se user create hua hona chahiye.');
+          setProfileChecked(true);
           setLoading(false);
           return;
         }
 
         const data = snap.val() || {};
         const profile = data.profile || {};
+        const savedTg = String(profile.telegramUsername || '').trim();
+        setTelegramUsername(savedTg);
+        setProfileChecked(true);
         const dash = data.dashboard || {};
         const wallet = data.wallet || {};
         const dailyMap = dash.daily || {};
@@ -94,12 +110,40 @@ function Dashboard() {
       } catch (err) {
         console.error('Dashboard load error:', err);
         setError('Dashboard load karte waqt error: ' + (err.code || err.message));
+        setProfileChecked(true);
         setLoading(false);
       }
     };
 
     loadDashboardData();
   }, [user]);
+
+  const needsTelegram = profileChecked && !telegramUsername;
+
+  const showLinkiplayNotice = !linkiplayDismissed;
+
+  const handleSaveTelegram = useCallback(
+    async (username) => {
+      if (!user?.email) throw new Error('Login required');
+      const emailKey = emailToKey(user.email);
+      const now = Date.now();
+      await update(ref(db, `users/${emailKey}/profile`), {
+        telegramUsername: username,
+        telegramUsernameAt: now,
+      });
+      setTelegramUsername(username);
+    },
+    [user],
+  );
+
+  const handleDismissLinkiplay = useCallback(() => {
+    setLinkiplayDismissed(true);
+    try {
+      sessionStorage.setItem(LINKIPLAY_NOTICE_KEY, '1');
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   const chartDataLast10 = useMemo(() => {
     if (!dailyData.length) return [];
@@ -123,7 +167,14 @@ function Dashboard() {
 
   return (
     <Layout activeNav="dashboard">
-      <div className={styles.mainInner}>
+      <DashboardGateModals
+        needsTelegram={needsTelegram}
+        telegramUsername={telegramUsername}
+        onSaveTelegram={handleSaveTelegram}
+        showLinkiplayNotice={showLinkiplayNotice}
+        onDismissLinkiplay={handleDismissLinkiplay}
+      />
+      <div className={styles.mainInner + (needsTelegram ? ' ' + styles.mainBlocked : '')}>
         {/* Title */}
         <div className={styles.pageTitle}>
           <div>
