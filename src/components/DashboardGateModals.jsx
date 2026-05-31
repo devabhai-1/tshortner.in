@@ -14,20 +14,20 @@ export default function DashboardGateModals({
   needsTelegram,
   telegramUsername,
   onSaveTelegram,
-  showLinkiplayNotice,
-  onDismissLinkiplay,
+  showMaintenanceNotice,
+  onDismissMaintenance,
 }) {
   const [input, setInput] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  if (!needsTelegram && !showLinkiplayNotice) return null;
+  if (!needsTelegram && !showMaintenanceNotice) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const normalized = normalizeTelegramUsername(input);
     if (!normalized) {
-      setError('Valid Telegram username daalo (3–32 chars, @ optional).');
+      setError('Enter a valid Telegram username (3–32 characters; @ is optional).');
       return;
     }
     setSaving(true);
@@ -35,7 +35,7 @@ export default function DashboardGateModals({
     try {
       await onSaveTelegram(normalized);
     } catch (err) {
-      setError(err?.message || 'Save failed. Dobara try karein.');
+      setError(err?.message || 'Unable to save. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -58,8 +58,8 @@ export default function DashboardGateModals({
               <h2 id="tg-username-title">Telegram Username Required</h2>
             </div>
             <p className={styles.lead}>
-              Aage badhne ke liye apna <strong>Telegram username</strong> zaroor daalo. Yeh sirf ek
-              baar puchenge — database me save ho jayega.
+              To continue, please provide your <strong>Telegram username</strong>. This is a
+              one-time setup and will be linked to your account for support and updates.
             </p>
             {telegramUsername ? (
               <p className={styles.savedHint}>
@@ -85,25 +85,27 @@ export default function DashboardGateModals({
               <button type="submit" className={styles.primaryBtn} disabled={saving}>
                 {saving ? 'Saving…' : 'Save & Continue'}
               </button>
-              <p className={styles.note}>Skip nahi hai — save ke baad hi dashboard khulega.</p>
+              <p className={styles.note}>
+                This step is required. Dashboard access will be enabled after you save.
+              </p>
             </form>
           </div>
         ) : null}
 
-        {showLinkiplayNotice ? (
-          <div className={styles.noticeModal} role="alertdialog" aria-labelledby="linkiplay-title">
+        {showMaintenanceNotice ? (
+          <div className={styles.noticeModal} role="alertdialog" aria-labelledby="maintenance-title">
             <div className={styles.noticeHeader}>
               <span className={styles.noticeIcon} aria-hidden>
                 ⚠️
               </span>
-              <h3 id="linkiplay-title">Important Notice</h3>
+              <h3 id="maintenance-title">TShortner — Important Notice</h3>
             </div>
             <p className={styles.noticeText}>
-              <strong>Linkiplay temporarily ruk gaya hai.</strong> Team isko fix kar rahi hai. Tab
-              tak kripya <strong>dhairya banaye rakhein</strong>.
+              <strong>TShortner is temporarily unavailable.</strong> Our team is working on a fix.
+              Thank you for your patience while we resolve this.
             </p>
-            <button type="button" className={styles.secondaryBtn} onClick={onDismissLinkiplay}>
-              Samajh gaya
+            <button type="button" className={styles.secondaryBtn} onClick={onDismissMaintenance}>
+              Got it
             </button>
           </div>
         ) : null}

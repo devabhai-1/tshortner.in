@@ -10,7 +10,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import DashboardGateModals from '../components/DashboardGateModals';
 import styles from './Dashboard.module.css';
 
-const LINKIPLAY_NOTICE_KEY = 'tshortner.linkiplay.notice.v1';
+const MAINTENANCE_NOTICE_KEY = 'tshortner.maintenance.notice.v1';
 
 function Dashboard() {
   const { user } = useAuth();
@@ -19,9 +19,9 @@ function Dashboard() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [telegramUsername, setTelegramUsername] = useState('');
   const [profileChecked, setProfileChecked] = useState(false);
-  const [linkiplayDismissed, setLinkiplayDismissed] = useState(() => {
+  const [maintenanceDismissed, setMaintenanceDismissed] = useState(() => {
     try {
-      return sessionStorage.getItem(LINKIPLAY_NOTICE_KEY) === '1';
+      return sessionStorage.getItem(MAINTENANCE_NOTICE_KEY) === '1';
     } catch {
       return false;
     }
@@ -120,7 +120,7 @@ function Dashboard() {
 
   const needsTelegram = profileChecked && !telegramUsername;
 
-  const showLinkiplayNotice = !linkiplayDismissed;
+  const showMaintenanceNotice = !maintenanceDismissed;
 
   const handleSaveTelegram = useCallback(
     async (username) => {
@@ -136,10 +136,10 @@ function Dashboard() {
     [user],
   );
 
-  const handleDismissLinkiplay = useCallback(() => {
-    setLinkiplayDismissed(true);
+  const handleDismissMaintenance = useCallback(() => {
+    setMaintenanceDismissed(true);
     try {
-      sessionStorage.setItem(LINKIPLAY_NOTICE_KEY, '1');
+      sessionStorage.setItem(MAINTENANCE_NOTICE_KEY, '1');
     } catch {
       /* ignore */
     }
@@ -171,8 +171,8 @@ function Dashboard() {
         needsTelegram={needsTelegram}
         telegramUsername={telegramUsername}
         onSaveTelegram={handleSaveTelegram}
-        showLinkiplayNotice={showLinkiplayNotice}
-        onDismissLinkiplay={handleDismissLinkiplay}
+        showMaintenanceNotice={showMaintenanceNotice}
+        onDismissMaintenance={handleDismissMaintenance}
       />
       <div className={styles.mainInner + (needsTelegram ? ' ' + styles.mainBlocked : '')}>
         {/* Title */}
