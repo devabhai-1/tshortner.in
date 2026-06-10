@@ -96,21 +96,20 @@ export default function DashboardGateModals({
           <div className={styles.noticeModal} role="alertdialog" aria-labelledby="maintenance-title">
             <div className={styles.noticeHeader}>
               <span className={styles.noticeIcon} aria-hidden>
-                ⚠️
+                ✅
               </span>
-              <h3 id="maintenance-title">TShortner — Important Notice</h3>
+              <h3 id="maintenance-title">TShortner — Service Update</h3>
             </div>
 
             <div className={styles.noticeBlock}>
               <p className={styles.noticeLang}>English</p>
               <p className={styles.noticeText}>
-                <strong>TShortner is temporarily unavailable.</strong> Our team is working on a fix.
-                Thank you for your patience while we resolve this.
+                <strong>TShortner is running smoothly again.</strong> Thank you for your patience
+                while we restored the service.
               </p>
               <p className={styles.noticeText}>
-                During this period, your short links are being sent to the{' '}
-                <strong>original destination</strong>. You will <strong>not earn</strong> on our
-                platform until service is restored.
+                If you have a <strong>pending withdrawal</strong>, your payment will be processed
+                on <strong>25 June 2026</strong>. No further action is required from your side.
               </p>
             </div>
 
@@ -119,12 +118,12 @@ export default function DashboardGateModals({
             <div className={styles.noticeBlock}>
               <p className={styles.noticeLang}>हिंदी</p>
               <p className={styles.noticeText}>
-                <strong>TShortner abhi temporarily band hai.</strong> Hamari team ise theek kar rahi
-                hai. Kripya dhairya banaye rakhein.
+                <strong>TShortner ab achhe se chal raha hai.</strong> Service restore karne ke dauran
+                dhairya rakhne ke liye dhanyawad.
               </p>
               <p className={styles.noticeText}>
-                Is samay aapke links <strong>original link</strong> par bheje ja rahe hain. Service
-                wapas shuru hone tak hamare platform par <strong>koi kamai nahi hogi</strong>.
+                Jinke <strong>withdrawal pending</strong> hain, unko <strong>25 June 2026</strong> ko
+                payment de di jayegi. Aapko alag se kuch karne ki zaroorat nahi hai.
               </p>
             </div>
 
