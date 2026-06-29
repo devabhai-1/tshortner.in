@@ -96,7 +96,7 @@ export default function DashboardGateModals({
           <div className={styles.noticeModal} role="alertdialog" aria-labelledby="maintenance-title">
             <div className={styles.noticeHeader}>
               <span className={styles.noticeIcon} aria-hidden>
-                ✅
+                ⚠️
               </span>
               <h3 id="maintenance-title">TShortner — Service Update</h3>
             </div>
@@ -104,12 +104,12 @@ export default function DashboardGateModals({
             <div className={styles.noticeBlock}>
               <p className={styles.noticeLang}>English</p>
               <p className={styles.noticeText}>
-                <strong>TShortner is running smoothly again.</strong> Thank you for your patience
-                while we restored the service.
+                <strong>TShortner is temporarily down from 28th, 8 PM onwards.</strong> We are
+                working to restore it.
               </p>
               <p className={styles.noticeText}>
-                If you have a <strong>pending withdrawal</strong>, your payment will be processed
-                on <strong>25 June 2026</strong>. No further action is required from your side.
+                The service is expected to be back within <strong>2–3 days</strong>. Thank you for
+                your patience.
               </p>
             </div>
 
@@ -118,12 +118,12 @@ export default function DashboardGateModals({
             <div className={styles.noticeBlock}>
               <p className={styles.noticeLang}>हिंदी</p>
               <p className={styles.noticeText}>
-                <strong>TShortner ab achhe se chal raha hai.</strong> Service restore karne ke dauran
-                dhairya rakhne ke liye dhanyawad.
+                <strong>TShortner 28 tarik ko 8 PM se aage band hai.</strong> Hum ise dobara chalu
+                karne par kaam kar rahe hain.
               </p>
               <p className={styles.noticeText}>
-                Jinke <strong>withdrawal pending</strong> hain, unko <strong>25 June 2026</strong> ko
-                payment de di jayegi. Aapko alag se kuch karne ki zaroorat nahi hai.
+                Ab <strong>2–3 din</strong> me vapas chalne ki umid rahegi. Aapke dhairya ke liye
+                dhanyawad.
               </p>
             </div>
 
