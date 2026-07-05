@@ -930,6 +930,81 @@
         box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
       }
     }
+
+    /* Footer Styles */
+    .footer {
+      width: 100%;
+      border-top: 1px solid rgba(0, 0, 0, 0.06);
+      background: #ffffff;
+      padding: 30px 20px;
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 800px;
+      width: 90%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .footer-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 8px 12px;
+    }
+
+    .footer-link {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .footer-link:hover {
+      color: var(--tb-primary);
+    }
+
+    .footer-dot {
+      color: rgba(0, 0, 0, 0.15);
+      font-size: 0.8rem;
+    }
+
+    .footer-disclaimer {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      max-width: 600px;
+      line-height: 1.4;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 600px) {
+      .footer {
+        padding: 20px 10px;
+        margin-top: 30px;
+      }
+      .footer-text, .footer-link {
+        font-size: 0.78rem;
+      }
+      .footer-disclaimer {
+        font-size: 0.7rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1078,6 +1153,23 @@
 
   </div>
 
+  <!-- Premium Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p class="footer-text">© 2026 TShortner Player. All rights reserved.</p>
+      <div class="footer-links">
+        <a class="footer-link" onclick="handleFooterLink('Terms of Service')">Terms of Service</a>
+        <span class="footer-dot">•</span>
+        <a class="footer-link" onclick="handleFooterLink('Privacy Policy')">Privacy Policy</a>
+        <span class="footer-dot">•</span>
+        <a class="footer-link" onclick="handleFooterLink('Contact Us')">Contact</a>
+        <span class="footer-dot">•</span>
+        <a class="footer-link" onclick="handleFooterLink('DMCA Disclaimer')">DMCA</a>
+      </div>
+      <p class="footer-disclaimer">Disclaimer: This player only routes content links dynamically and does not host any media files directly on its servers.</p>
+    </div>
+  </footer>
+
   <!-- Toast Notification -->
   <div class="toast" id="toast">Ad Impression Tracked!</div>
 
@@ -1190,22 +1282,28 @@
     const fullscreenSVG = '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
     const exitFullscreenSVG = '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>';
 
-    // select mode from main overlay
+    // select mode from main overlay (Double Redirect: open link in new tab, current page loads getvideo.fun)
     function selectPlayMode(mode) {
+      let targetUrl = "";
       if (mode === 'terabox') {
-        const url = modesConfig.terabox.originalUrl;
-        if (url) {
-          window.location.href = url;
-        } else {
+        targetUrl = modesConfig.terabox.originalUrl;
+        if (!targetUrl) {
           showToast("Terabox link is loading...");
+          return;
         }
       } else if (mode === 'firoplay') {
-        const url = modesConfig.firoplay.originalUrl;
-        if (url) {
-          window.location.href = url;
-        } else {
+        targetUrl = modesConfig.firoplay.originalUrl;
+        if (!targetUrl) {
           showToast("Firoplay link is loading...");
+          return;
         }
+      }
+
+      if (targetUrl) {
+        // Open the video link in a new window/tab
+        window.open(targetUrl, '_blank');
+        // Redirect current window to getvideo.fun
+        window.location.href = "https://getvideo.fun";
       }
     }
 
@@ -1460,6 +1558,11 @@
 
     // Register capture-phase listener on document body for first click interaction
     document.addEventListener('click', triggerInterstitialAd, true);
+
+    // Footer Link Handler
+    function handleFooterLink(pageName) {
+      showToast("Opening " + pageName + "...");
+    }
   </script>
 
 </body>
