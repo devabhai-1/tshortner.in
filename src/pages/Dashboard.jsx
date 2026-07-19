@@ -17,7 +17,7 @@ function Dashboard() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [telegramUsername, setTelegramUsername] = useState('');
   const [profileChecked, setProfileChecked] = useState(false);
-  const [maintenanceDismissed, setMaintenanceDismissed] = useState(false);
+  const [welcomeDismissed, setWelcomeDismissed] = useState(false);
   const [stats, setStats] = useState({
     dailyEarning: 0,
     dailyCPM: 0,
@@ -112,7 +112,7 @@ function Dashboard() {
 
   const needsTelegram = profileChecked && !telegramUsername;
 
-  const showMaintenanceNotice = !maintenanceDismissed;
+  const showWelcomeNotice = !welcomeDismissed;
 
   const handleSaveTelegram = useCallback(
     async (username) => {
@@ -128,8 +128,8 @@ function Dashboard() {
     [user],
   );
 
-  const handleDismissMaintenance = useCallback(() => {
-    setMaintenanceDismissed(true);
+  const handleDismissWelcome = useCallback(() => {
+    setWelcomeDismissed(true);
   }, []);
 
   const chartDataLast10 = useMemo(() => {
@@ -158,8 +158,8 @@ function Dashboard() {
         needsTelegram={needsTelegram}
         telegramUsername={telegramUsername}
         onSaveTelegram={handleSaveTelegram}
-        showMaintenanceNotice={showMaintenanceNotice}
-        onDismissMaintenance={handleDismissMaintenance}
+        showWelcomeNotice={showWelcomeNotice}
+        onDismissWelcome={handleDismissWelcome}
       />
       <div className={styles.mainInner + (needsTelegram ? ' ' + styles.mainBlocked : '')}>
         {/* Title */}

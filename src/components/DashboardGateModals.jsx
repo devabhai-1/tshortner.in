@@ -14,14 +14,14 @@ export default function DashboardGateModals({
   needsTelegram,
   telegramUsername,
   onSaveTelegram,
-  showMaintenanceNotice,
-  onDismissMaintenance,
+  showWelcomeNotice,
+  onDismissWelcome,
 }) {
   const [input, setInput] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  if (!needsTelegram && !showMaintenanceNotice) return null;
+  if (!needsTelegram && !showWelcomeNotice) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,24 +92,20 @@ export default function DashboardGateModals({
           </div>
         ) : null}
 
-        {showMaintenanceNotice ? (
-          <div className={styles.noticeModal} role="alertdialog" aria-labelledby="maintenance-title">
+        {showWelcomeNotice ? (
+          <div className={styles.noticeModal} role="alertdialog" aria-labelledby="welcome-title">
             <div className={styles.noticeHeader}>
               <span className={styles.noticeIcon} aria-hidden>
-                ⚠️
+                🎉
               </span>
-              <h3 id="maintenance-title">TShortner — Service Update</h3>
+              <h3 id="welcome-title">Welcome to TShortner!</h3>
             </div>
 
             <div className={styles.noticeBlock}>
               <p className={styles.noticeLang}>English</p>
               <p className={styles.noticeText}>
-                <strong>TShortner is temporarily down from 28th, 8 PM onwards.</strong> We are
-                working to restore it.
-              </p>
-              <p className={styles.noticeText}>
-                The service is expected to be back within <strong>2–3 days</strong>. Thank you for
-                your patience.
+                <strong>Welcome aboard!</strong> We are thrilled to have you here. 
+                Start shortening your links and earning today.
               </p>
             </div>
 
@@ -118,17 +114,12 @@ export default function DashboardGateModals({
             <div className={styles.noticeBlock}>
               <p className={styles.noticeLang}>हिंदी</p>
               <p className={styles.noticeText}>
-                <strong>TShortner 28 tarik ko 8 PM se aage band hai.</strong> Hum ise dobara chalu
-                karne par kaam kar rahe hain.
-              </p>
-              <p className={styles.noticeText}>
-                Ab <strong>2–3 din</strong> me vapas chalne ki umid rahegi. Aapke dhairya ke liye
-                dhanyawad.
+                <strong>TShortner me aapka swagat hai!</strong> Aaj hi apne links chote karein aur earning shuru karein.
               </p>
             </div>
 
-            <button type="button" className={styles.secondaryBtn} onClick={onDismissMaintenance}>
-              Got it / Samajh gaya
+            <button type="button" className={styles.secondaryBtn} onClick={onDismissWelcome}>
+              Let's Go / Chaliye shuru karein
             </button>
           </div>
         ) : null}
