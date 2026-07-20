@@ -337,9 +337,9 @@ function Wallet() {
                   }}
                   required
                 >
-                  <option value="UPI">UPI (India)</option>
-                  <option value="Binance">Binance (USDT · TRC20)</option>
-                  <option value="Bank">Bank Transfer (India)</option>
+                  <option value="UPI">UPI (India) - Original rate payment</option>
+                  <option value="Binance">Binance (USDT · TRC20) - 4% fee</option>
+                  <option value="Bank">Bank Transfer (India) - Original rate payment</option>
                 </select>
                 <span className={styles.hintText}>
                   3 methods available: <b>UPI</b> India ke liye, <b>Binance USDT (TRC20)</b> global ke liye, aur <b>Bank Transfer</b> India ke liye.
