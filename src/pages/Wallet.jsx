@@ -162,9 +162,21 @@ function Wallet() {
     try {
       const emailKey = emailToKey(user.email);
       
-      // 1. Calculate new balances
-      const newCurrent = walletState.currentBalance - amountVal;
-      const newPending = walletState.pendingBalance + amountVal;
+      // 1. Calculate fees and new balances
+      let requestAmount = amountVal;
+      let deductedAmount = amountVal;
+      let fee = 0;
+
+      if (method === 'Binance') {
+        fee = amountVal * 0.04;
+        requestAmount = amountVal - fee;
+        
+        requestAmount = Math.round(requestAmount * 100) / 100;
+        fee = Math.round(fee * 100) / 100;
+      }
+
+      const newCurrent = walletState.currentBalance - deductedAmount;
+      const newPending = walletState.pendingBalance + requestAmount;
 
       // 2. Create request
       const reqRef = ref(db, "users/" + emailKey + "/wallet/withdrawalRequests");
@@ -175,7 +187,9 @@ function Wallet() {
         createdAt: Date.now(),
         currency: "USD",
         status: "pending",
-        amount: amountVal,
+        amount: requestAmount,
+        originalAmount: deductedAmount,
+        feeAmount: fee,
         method,
         account: method === 'Bank' ? `${accountHolderName.trim()} - ${bankName.trim()}` : account.trim(),
         // Bank-specific fields
@@ -207,7 +221,8 @@ function Wallet() {
         : account.trim();
       alert(
         "Withdraw Request Submitted\n\n" +
-        "Amount: $" + formatMoney(amountVal) + "\n" +
+        "Amount Deducted: $" + formatMoney(deductedAmount) + "\n" +
+        (method === 'Binance' ? "Fee (4%): $" + formatMoney(fee) + "\n" + "Amount Requested: $" + formatMoney(requestAmount) + "\n" : "") +
         "Method: " + method + "\n" +
         "Account: " + accountDisplay + "\n\n" +
         "Balance update ho chuka hai. Ab request Pending me hai."
