@@ -20,6 +20,8 @@
 
 @media (max-width: 900px) {
   .mainInner {
-    padding: 1rem max(0.5rem, env(safe-area-inset-left)) 2rem max(0.5rem, env(safe-area-inset-right));
+    padding: 0.75rem 0 2rem;
+    width: 100%;
+    max-width: 100%;
   }
 }

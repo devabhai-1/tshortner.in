@@ -20,9 +20,17 @@ function Navbar({ subtitle = 'Premium Dashboard' }) {
     <header className={styles.navbar}>
       <div className={styles.navInner}>
         <div className={styles.navLeft}>
-          <div className={styles.logoCircle}></div>
+          <div className={styles.logoCircle}>
+            <svg viewBox="0 0 512 512" className={styles.logoSvgIcon}>
+              <g transform="translate(256, 256) rotate(-45)">
+                <path d="M -16,-48 H 64 A 48,48 0 0,1 64,48 H -16" fill="none" stroke="#FFFFFF" strokeWidth="44" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M 16,48 H -64 A 48,48 0 0,1 -64,-48 H 16" fill="none" stroke="#FFFFFF" strokeWidth="44" strokeLinecap="round" strokeLinejoin="round"/>
+                <line x1="-40" y1="0" x2="40" y2="0" stroke="#FFFFFF" strokeWidth="44" strokeLinecap="round"/>
+              </g>
+            </svg>
+          </div>
           <div className={styles.brandText}>
-            <span className={styles.brandTitle}>TShortner</span>
+            <span className={styles.brandTitle}>TeraBox Shortener</span>
             <span className={styles.brandSub}>{subtitle}</span>
           </div>
         </div>

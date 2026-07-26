@@ -469,3 +469,10 @@
   background: rgba(217, 119, 6, 0.1);
   border-color: rgba(217, 119, 6, 0.6);
 }
+
+@media (max-width: 900px) {
+  .mainInner {
+    padding: 0.85rem 0 1.75rem;
+    max-width: 100%;
+  }
+}
