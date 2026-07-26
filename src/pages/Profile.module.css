@@ -93,8 +93,8 @@
 }
 
 [data-theme="light"] .featureCard {
-  background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(217, 119, 6, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 132, 255, 0.2);
 }
 
 .featureCard h3 {
@@ -135,7 +135,7 @@
 }
 
 [data-theme="light"] .featureCard li::before {
-  color: #d97706;
+  color: #0084ff;
 }
 
 .ctaBox {
@@ -193,8 +193,8 @@
 }
 
 [data-theme="light"] .primaryButton {
-  background: linear-gradient(135deg, #d97706, #f59e0b);
-  box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+  background: linear-gradient(135deg, #0084ff, #0052d4);
+  box-shadow: 0 4px 15px rgba(0, 132, 255, 0.35);
 }
 
 .primaryButton:hover {
@@ -203,7 +203,7 @@
 }
 
 [data-theme="light"] .primaryButton:hover {
-  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.6);
+  box-shadow: 0 6px 20px rgba(0, 132, 255, 0.5);
 }
 
 .secondaryButton {
@@ -220,7 +220,7 @@
 
 [data-theme="light"] .secondaryButton {
   color: #0f172a;
-  border-color: rgba(217, 119, 6, 0.4);
+  border-color: rgba(0, 132, 255, 0.35);
 }
 
 .secondaryButton:hover {
@@ -229,8 +229,8 @@
 }
 
 [data-theme="light"] .secondaryButton:hover {
-  background: rgba(217, 119, 6, 0.1);
-  border-color: rgba(217, 119, 6, 0.6);
+  background: rgba(0, 132, 255, 0.08);
+  border-color: rgba(0, 132, 255, 0.6);
 }
 
 .mainInner {
@@ -299,12 +299,12 @@
 
 [data-theme="light"] .card {
   background: #ffffff;
-  border-color: rgba(217, 119, 6, 0.28);
+  border-color: rgba(0, 132, 255, 0.22);
   box-shadow: var(--shadow-card);
 }
 
 [data-theme="light"] .card:hover {
-  border-color: rgba(217, 119, 6, 0.42);
+  border-color: rgba(0, 132, 255, 0.4);
   box-shadow: var(--shadow-card-hover);
 }
 
@@ -357,7 +357,7 @@
 [data-theme="light"] .field input,
 [data-theme="light"] .field select {
   background: #ffffff;
-  border: 1px solid rgba(217, 119, 6, 0.3);
+  border: 1px solid rgba(0, 132, 255, 0.25);
   color: #0f172a;
   font-weight: 500;
 }

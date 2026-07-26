@@ -82,12 +82,12 @@
 
 [data-theme="light"] .card {
   background: #ffffff;
-  border-color: rgba(217, 119, 6, 0.28);
+  border-color: rgba(0, 132, 255, 0.22);
   box-shadow: var(--shadow-card);
 }
 
 [data-theme="light"] .card:hover {
-  border-color: rgba(217, 119, 6, 0.42);
+  border-color: rgba(0, 132, 255, 0.4);
   box-shadow: var(--shadow-card-hover);
 }
 
@@ -268,7 +268,7 @@
 [data-theme="light"] .field input,
 [data-theme="light"] .field select {
   background: #ffffff;
-  border: 1px solid rgba(217, 119, 6, 0.3);
+  border: 1px solid rgba(0, 132, 255, 0.25);
   color: #0f172a;
   font-weight: 500;
 }
@@ -280,8 +280,8 @@
 
 [data-theme="light"] .field input:focus,
 [data-theme="light"] .field select:focus {
-  border-color: #d97706;
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
+  border-color: #0084ff;
+  box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.18);
 }
 
 .hintText {

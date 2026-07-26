@@ -90,12 +90,12 @@
 
 [data-theme="light"] .card {
   background: #ffffff;
-  border-color: rgba(217, 119, 6, 0.28);
+  border-color: rgba(0, 132, 255, 0.22);
   box-shadow: var(--shadow-card);
 }
 
 [data-theme="light"] .card:hover {
-  border-color: rgba(217, 119, 6, 0.42);
+  border-color: rgba(0, 132, 255, 0.4);
   box-shadow: var(--shadow-card-hover);
 }
 
@@ -361,7 +361,7 @@ tbody tr:hover {
 }
 
 [data-theme="light"] .tableOptions {
-  border-top: 1px solid rgba(217, 119, 6, 0.3);
+  border-top: 1px solid rgba(0, 132, 255, 0.22);
 }
 
 .optionBtn {
@@ -381,7 +381,7 @@ tbody tr:hover {
 
 [data-theme="light"] .optionBtn {
   background: #ffffff;
-  border: 1px solid rgba(217, 119, 6, 0.3);
+  border: 1px solid rgba(0, 132, 255, 0.25);
   color: #0f172a;
   font-weight: 600;
 }
@@ -394,9 +394,9 @@ tbody tr:hover {
 }
 
 [data-theme="light"] .optionBtn:hover:not(:disabled) {
-  background: rgba(217, 119, 6, 0.15);
-  border-color: rgba(217, 119, 6, 0.5);
-  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+  background: rgba(0, 132, 255, 0.12);
+  border-color: rgba(0, 132, 255, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 132, 255, 0.2);
 }
 
 .optionBtn:disabled {
@@ -441,7 +441,7 @@ tbody tr:hover {
 
 [data-theme="light"] .navLinkBtn {
   background: #ffffff;
-  border: 1px solid rgba(217, 119, 6, 0.3);
+  border: 1px solid rgba(0, 132, 255, 0.25);
   color: #0f172a;
   font-weight: 600;
 }
@@ -454,9 +454,9 @@ tbody tr:hover {
 }
 
 [data-theme="light"] .navLinkBtn:hover {
-  background: rgba(217, 119, 6, 0.15);
-  border-color: rgba(217, 119, 6, 0.5);
-  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
+  background: rgba(0, 132, 255, 0.12);
+  border-color: rgba(0, 132, 255, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 132, 255, 0.2);
 }
 
 .navLinkIcon {

@@ -81,12 +81,12 @@
 
 [data-theme="light"] .card {
   background: #ffffff;
-  border-color: rgba(217, 119, 6, 0.28);
+  border-color: rgba(0, 132, 255, 0.22);
   box-shadow: var(--shadow-card);
 }
 
 [data-theme="light"] .card:hover {
-  border-color: rgba(217, 119, 6, 0.42);
+  border-color: rgba(0, 132, 255, 0.4);
   box-shadow: var(--shadow-card-hover);
 }
 
@@ -108,7 +108,7 @@
 
 [data-theme="light"] .botCard {
   background: #ffffff;
-  border: 1px solid rgba(217, 119, 6, 0.26);
+  border: 1px solid rgba(0, 132, 255, 0.22);
   box-shadow: var(--shadow-card);
   border-radius: var(--radius-md);
   transition: transform 0.35s var(--ease-premium), box-shadow 0.35s var(--ease-premium);
@@ -158,9 +158,9 @@
 }
 
 [data-theme="light"] .btnSecondary {
-  border: 1px solid rgba(217, 119, 6, 0.5);
-  background: rgba(217, 119, 6, 0.1);
-  color: #d97706;
+  border: 1px solid rgba(0, 132, 255, 0.4);
+  background: rgba(0, 132, 255, 0.08);
+  color: #0084ff;
   font-weight: 600;
 }
 
@@ -169,8 +169,8 @@
 }
 
 [data-theme="light"] .btnSecondary:hover {
-  background: rgba(217, 119, 6, 0.2);
-  border-color: rgba(217, 119, 6, 0.7);
+  background: rgba(0, 132, 255, 0.16);
+  border-color: rgba(0, 132, 255, 0.6);
 }
 
 /* Form */
@@ -206,7 +206,7 @@
 
 [data-theme="light"] .field input {
   background: #ffffff;
-  border: 1px solid rgba(217, 119, 6, 0.3);
+  border: 1px solid rgba(0, 132, 255, 0.25);
   color: #0f172a;
   font-weight: 500;
 }
@@ -217,8 +217,8 @@
 }
 
 [data-theme="light"] .field input:focus {
-  border-color: #d97706;
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
+  border-color: #0084ff;
+  box-shadow: 0 0 0 3px rgba(0, 132, 255, 0.18);
 }
 
 .hintText {
@@ -313,7 +313,7 @@
 
 [data-theme="light"] .outputValue {
   background: #ffffff;
-  border: 1px solid rgba(217, 119, 6, 0.3);
+  border: 1px solid rgba(0, 132, 255, 0.25);
   color: #0f172a;
   font-weight: 500;
 }
@@ -332,15 +332,15 @@
 }
 
 [data-theme="light"] .copyMini {
-  border: 1px solid rgba(217, 119, 6, 0.5);
-  background: rgba(217, 119, 6, 0.1);
-  color: #d97706;
+  border: 1px solid rgba(0, 132, 255, 0.4);
+  background: rgba(0, 132, 255, 0.08);
+  color: #0084ff;
   font-weight: 600;
 }
 
 [data-theme="light"] .copyMini:hover {
-  background: rgba(217, 119, 6, 0.2);
-  border-color: rgba(217, 119, 6, 0.7);
+  background: rgba(0, 132, 255, 0.16);
+  border-color: rgba(0, 132, 255, 0.6);
 }
 
 /* Section Title */
@@ -474,7 +474,7 @@ tbody tr:hover {
 }
 
 [data-theme="light"] .urlShort {
-  color: #d97706;
+  color: #0084ff;
   font-weight: 600;
 }
 
@@ -512,7 +512,7 @@ tbody tr:hover {
 }
 
 [data-theme="light"] .btnXs {
-  border: 1px solid rgba(217, 119, 6, 0.4);
+  border: 1px solid rgba(0, 132, 255, 0.35);
   background: #ffffff;
   color: #0f172a;
   font-weight: 600;
@@ -523,8 +523,8 @@ tbody tr:hover {
 }
 
 [data-theme="light"] .btnXs:hover {
-  background: rgba(217, 119, 6, 0.1);
-  border-color: rgba(217, 119, 6, 0.6);
+  background: rgba(0, 132, 255, 0.08);
+  border-color: rgba(0, 132, 255, 0.5);
 }
 
 @media (max-width: 900px) {
