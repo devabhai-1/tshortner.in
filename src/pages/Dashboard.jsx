@@ -10,6 +10,38 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import DashboardGateModals from '../components/DashboardGateModals';
 import styles from './Dashboard.module.css';
 
+const CustomChartTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className={styles.customTooltip}>
+        <div className={styles.tooltipHeader}>
+          <span className={styles.tooltipIcon}>📅</span>
+          <span className={styles.tooltipDate}>{label}</span>
+        </div>
+        <div className={styles.tooltipDivider} />
+        <div className={styles.tooltipBody}>
+          {payload.map((entry, index) => (
+            <div key={`item-${index}`} className={styles.tooltipRow}>
+              <div className={styles.tooltipLeft}>
+                <span className={styles.tooltipDot} style={{ backgroundColor: entry.color }}></span>
+                <span className={styles.tooltipName}>
+                  {entry.dataKey === 'earning' ? 'Daily Earning' : 'Impressions'}
+                </span>
+              </div>
+              <span className={styles.tooltipValue} style={{ color: entry.color }}>
+                {entry.dataKey === 'earning' 
+                  ? `$${Number(entry.value).toFixed(2)}` 
+                  : `${(Number(entry.value) * 1000).toLocaleString()} views`}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
 function Dashboard() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -148,6 +180,19 @@ function Dashboard() {
     });
   }, [dailyData]);
 
+  const chartStats10 = useMemo(() => {
+    if (!chartDataLast10.length) return { peakEarning: 0, peakViews: 0, total10Earning: 0 };
+    let peakE = 0;
+    let peakV = 0;
+    let totE = 0;
+    chartDataLast10.forEach(item => {
+      if (item.earning > peakE) peakE = item.earning;
+      if (item.impressions > peakV) peakV = item.impressions;
+      totE += item.earning;
+    });
+    return { peakEarning: peakE, peakViews: peakV * 1000, total10Earning: totE };
+  }, [chartDataLast10]);
+
   if (loading) {
     return <LoadingSpinner message="Loading dashboard..." />;
   }
@@ -240,109 +285,110 @@ function Dashboard() {
             <div className={styles.card}>
               <div className={styles.sectionTitle}>
                 <div>
-                  <h2>Performance Chart (Last 10 Days)</h2>
-                  <span>Daily earnings aur impressions ka visual overview.</span>
+                  <h2>📊 Performance Analytics (Last 10 Days)</h2>
+                  <span>Real-time daily earnings & impressions analytics breakdown.</span>
                 </div>
-                <span className={styles.badge}>Last 10 Days</span>
+                <span className={styles.badgeGreen}>⚡ Live 10-Day Metrics</span>
+              </div>
+
+              {/* Indicator Summary Pills */}
+              <div className={styles.chartHeaderStats}>
+                <div className={styles.statPill}>
+                  <span className={styles.statPillLabel}>Peak Earning Day</span>
+                  <span className={`${styles.statPillVal} ${styles.greenVal}`}>${formatMoney(chartStats10.peakEarning)}</span>
+                </div>
+                <div className={styles.statPill}>
+                  <span className={styles.statPillLabel}>Peak Impressions</span>
+                  <span className={`${styles.statPillVal} ${styles.blueVal}`}>{formatNumber(chartStats10.peakViews)}</span>
+                </div>
+                <div className={styles.statPill}>
+                  <span className={styles.statPillLabel}>10-Day Total Earning</span>
+                  <span className={`${styles.statPillVal} ${styles.purpleVal}`}>${formatMoney(chartStats10.total10Earning)}</span>
+                </div>
               </div>
 
               <div className={styles.chartWrapper}>
-                <ResponsiveContainer width="100%" height={isMobile ? 320 : 400} minHeight={isMobile ? 320 : 400}>
+                <ResponsiveContainer width="100%" height={isMobile ? 340 : 420} minHeight={isMobile ? 340 : 420}>
                   <ComposedChart
                     data={chartDataLast10}
-                    margin={{ top: 16, right: 20, left: 8, bottom: isMobile ? 50 : 24 }}
+                    margin={{ top: 20, right: 24, left: 0, bottom: isMobile ? 40 : 20 }}
                   >
                     <defs>
                       <linearGradient id="earningGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#22c55e" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#22c55e" stopOpacity={0.05}/>
+                        <stop offset="0%" stopColor="#10b981" stopOpacity={0.45}/>
+                        <stop offset="60%" stopColor="#059669" stopOpacity={0.12}/>
+                        <stop offset="100%" stopColor="#047857" stopOpacity={0.0}/>
                       </linearGradient>
                       <linearGradient id="impressionsGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#60a5fa" stopOpacity={0.25}/>
-                        <stop offset="95%" stopColor="#60a5fa" stopOpacity={0.05}/>
+                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.35}/>
+                        <stop offset="60%" stopColor="#1d4ed8" stopOpacity={0.10}/>
+                        <stop offset="100%" stopColor="#1e40af" stopOpacity={0.0}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="var(--border-soft)" opacity={0.3} />
+                    <CartesianGrid strokeDasharray="4 4" stroke="var(--border-soft)" opacity={0.18} vertical={false} />
                     <XAxis 
                       dataKey="date" 
                       stroke="var(--text-soft)"
-                      tick={{ fontSize: isMobile ? 11 : 12, fill: 'var(--text-soft)', fontWeight: 500 }}
-                      angle={isMobile ? -35 : 0}
-                      textAnchor={isMobile ? 'end' : 'middle'}
-                      height={isMobile ? 56 : 44}
-                      axisLine={{ stroke: 'var(--border-soft)' }}
-                      tickLine={{ stroke: 'var(--border-soft)' }}
+                      tick={{ fontSize: isMobile ? 10 : 12, fill: 'var(--text-soft)', fontWeight: 600 }}
+                      axisLine={{ stroke: 'var(--border-soft)', opacity: 0.4 }}
+                      tickLine={false}
                       interval={0}
-                      tickMargin={8}
+                      tickMargin={10}
                     />
                     <YAxis 
                       yAxisId="left"
-                      stroke="var(--text-soft)"
-                      tick={{ fontSize: isMobile ? 10 : 11, fill: 'var(--text-soft)', fontWeight: 500 }}
-                      width={44}
-                      axisLine={{ stroke: 'var(--border-soft)' }}
-                      tickLine={{ stroke: 'var(--border-soft)' }}
+                      stroke="#10b981"
+                      tick={{ fontSize: isMobile ? 10 : 11, fill: '#10b981', fontWeight: 600 }}
+                      width={48}
+                      axisLine={false}
+                      tickLine={false}
                       domain={['auto', 'auto']}
-                      tickFormatter={(v) => Number(v).toFixed(1)}
+                      tickFormatter={(v) => `$${Number(v).toFixed(1)}`}
                       allowDecimals={true}
                     />
                     <YAxis 
                       yAxisId="right"
                       orientation="right"
-                      stroke="var(--text-soft)"
-                      tick={{ fontSize: isMobile ? 10 : 11, fill: 'var(--text-soft)', fontWeight: 500 }}
-                      width={44}
-                      axisLine={{ stroke: 'var(--border-soft)' }}
-                      tickLine={{ stroke: 'var(--border-soft)' }}
+                      stroke="#3b82f6"
+                      tick={{ fontSize: isMobile ? 10 : 11, fill: '#3b82f6', fontWeight: 600 }}
+                      width={48}
+                      axisLine={false}
+                      tickLine={false}
                       domain={['auto', 'auto']}
-                      tickFormatter={(v) => Number(v).toFixed(1)}
+                      tickFormatter={(v) => `${Number(v).toFixed(1)}K`}
                       allowDecimals={true}
                     />
-                    <Tooltip 
-                      contentStyle={{
-                        backgroundColor: 'var(--card-bg)',
-                        border: '2px solid var(--border-soft)',
-                        borderRadius: '0.75rem',
-                        color: 'var(--text-main)',
-                        fontSize: isMobile ? '0.8rem' : '0.9rem',
-                        padding: isMobile ? '0.6rem' : '0.75rem',
-                        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)'
-                      }}
-                      wrapperStyle={{ fontSize: isMobile ? '0.75rem' : '0.85rem' }}
-                      cursor={{ stroke: 'var(--accent)', strokeWidth: 1, strokeDasharray: '5 5' }}
-                      formatter={(value, name) => [name === 'Earning ($)' ? `$ ${Number(value).toFixed(2)}` : `${Number(value).toFixed(2)} K`, name]}
-                      labelFormatter={(label) => `Date: ${label}`}
-                    />
+                    <Tooltip content={<CustomChartTooltip />} cursor={{ stroke: '#10b981', strokeWidth: 1.5, strokeDasharray: '4 4' }} />
                     <Legend 
-                      wrapperStyle={{ fontSize: isMobile ? '0.8rem' : '0.9rem', paddingTop: '0.75rem', fontWeight: 600 }}
+                      wrapperStyle={{ fontSize: isMobile ? '0.78rem' : '0.88rem', paddingTop: '1.2rem', fontWeight: 700 }}
                       iconSize={12}
-                      iconType="rect"
+                      iconType="circle"
                     />
                     <Area 
                       yAxisId="left"
                       type="monotone" 
                       dataKey="earning" 
                       fill="url(#earningGradient)"
-                      stroke="#22c55e" 
-                      strokeWidth={2}
-                      name="Earning ($)"
+                      stroke="#10b981" 
+                      strokeWidth={3}
+                      name="Daily Earning ($)"
                       isAnimationActive={true}
-                      animationDuration={400}
-                      activeDot={{ r: 6, fill: '#22c55e', stroke: '#fff', strokeWidth: 2 }}
+                      animationDuration={600}
+                      dot={{ r: 4, fill: '#10b981', stroke: '#ffffff', strokeWidth: 1.5 }}
+                      activeDot={{ r: 7, fill: '#10b981', stroke: '#ffffff', strokeWidth: 3 }}
                     />
                     <Line 
                       yAxisId="right"
                       type="monotone" 
                       dataKey="impressions" 
-                      stroke="#60a5fa" 
-                      strokeWidth={2}
-                      dot={false}
+                      stroke="#3b82f6" 
+                      strokeWidth={3}
+                      dot={{ r: 4, fill: '#3b82f6', stroke: '#ffffff', strokeWidth: 1.5 }}
                       name="Impressions (K)"
                       isAnimationActive={true}
-                      animationDuration={400}
-                      activeDot={{ r: 6, fill: '#60a5fa', stroke: '#fff', strokeWidth: 2 }}
+                      animationDuration={600}
+                      activeDot={{ r: 7, fill: '#3b82f6', stroke: '#ffffff', strokeWidth: 3 }}
                     />
-                    <ReferenceLine yAxisId="left" y={0} stroke="var(--border-soft)" strokeDasharray="2 2" opacity={0.5} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
