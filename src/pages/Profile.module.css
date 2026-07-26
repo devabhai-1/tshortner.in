@@ -475,4 +475,18 @@
     padding: 0.85rem 0 1.75rem;
     max-width: 100%;
   }
+
+  .pageTitle {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    padding: 0.85rem 0.75rem;
+    border-radius: 0.75rem;
+    border-left: none;
+    border-right: none;
+    width: 100%;
+  }
 }
