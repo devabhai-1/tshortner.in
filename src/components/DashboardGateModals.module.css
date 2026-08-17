@@ -20,7 +20,9 @@
 }
 
 .stack:has(.noticeModal) {
-  max-width: min(30rem, 96vw);
+  max-width: min(34rem, 96vw);
+  max-height: min(90vh, 44rem);
+  overflow: auto;
 }
 
 .modal,
@@ -99,6 +101,16 @@
 [data-theme='light'] .lead,
 [data-theme='light'] .noticeText {
   color: #475569;
+}
+
+.noticeText a {
+  color: #4ade80;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
+[data-theme='light'] .noticeText a {
+  color: #15803d;
 }
 
 .savedHint {

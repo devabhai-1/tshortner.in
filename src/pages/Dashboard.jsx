@@ -215,6 +215,26 @@ function Dashboard() {
           </div>
         </div>
 
+        <aside className={styles.siteNotice} role="status">
+          <div className={styles.siteNoticeHead}>
+            <span aria-hidden>📢</span>
+            <strong>Important Notice</strong>
+          </div>
+          <p>
+            <strong>16 August, 2:00 PM</strong> se Shortner traffic aapke{' '}
+            <strong>original link</strong> par bhej diya gaya hai. Shortner <strong>2–3 din</strong>{' '}
+            update hoga — update ke baad wapas chalu. Tab tak <strong>earning nahi hogi</strong>.
+          </p>
+          <p>
+            <a href="https://firoplay.com" target="_blank" rel="noopener noreferrer">
+              firoplay.com
+            </a>{' '}
+            ke saath aao — <strong>$3 CPM</strong> pa sakte ho. Sabhi ke payment{' '}
+            <strong>25 August</strong> ko complete honge. Apna <strong>withdrawal</strong> abhi laga
+            do. 25 ke baad regular payments time par hone lagenge.
+          </p>
+        </aside>
+
         {error && <div className={styles.error}>{error}</div>}
 
         {/* TOP STATS (6 CARDS) */}
