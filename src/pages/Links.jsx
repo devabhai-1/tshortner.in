@@ -99,7 +99,7 @@ function Links() {
 
     const code = extractCodeFromUrl(longUrl);
     if (!code) {
-      setUrlError('Is URL me /s/<id> nahi mila. Example: https://example.com/s/hjfvshgvgfgfggafs');
+      setUrlError('Yeh URL short nahi ho sakti. Valid Terabox / share link paste karo.');
       return;
     }
 
@@ -124,7 +124,7 @@ function Links() {
 
       if (alreadyExists) {
         // naya row add nahi karenge, count bhi same rahega (EXACT same as HTML)
-        setOutputNote('Ye /s/' + code + ' pehle se saved hai, existing short link hi use ho raha hai.');
+        setOutputNote('Yeh link pehle se saved hai — existing short link use ho raha hai.');
       } else {
         // table me new row add karo (prepend)
         setWebLinks(prev => [item, ...prev]);
@@ -190,7 +190,7 @@ function Links() {
           </div>
           <div className={styles.tagSmall}>
             <span className={styles.tagDot}></span>
-            <span>Terabox ID → teraboxlinke.com</span>
+            <span>Web + Telegram short links</span>
           </div>
         </div>
 
@@ -205,15 +205,15 @@ function Links() {
           <div className={styles.createHead}>
             <div>
               <h2>Create web short link</h2>
-              <p>URL me <code>/s/ID</code> hona chahiye — system us ID ko teraboxlinke.com pe map karega.</p>
+              <p>Long link paste karo — short link generate hoke save ho jayegi.</p>
             </div>
             <span className={styles.badgeSoft}>Web</span>
           </div>
 
-          <div className={styles.helperChips} aria-label="URL pattern examples">
-            <span className={styles.chip}>…/s/yourID</span>
-            <span className={styles.chip}>teraboxlinke.com/s/…</span>
-            <span className={styles.chip}>Any domain with /s/</span>
+          <div className={styles.helperChips} aria-label="Tips">
+            <span className={styles.chip}>Paste long URL</span>
+            <span className={styles.chip}>Generate short link</span>
+            <span className={styles.chip}>Copy & share</span>
           </div>
 
           <form onSubmit={handleSubmit} className={styles.createForm}>
@@ -224,12 +224,11 @@ function Links() {
                 type="url"
                 value={webUrl}
                 onChange={(e) => setWebUrl(e.target.value)}
-                placeholder="https://example.com/s/hjfvshgvgfgfggafs"
+                placeholder="https://…"
                 required
               />
               <p className={styles.hintText}>
-                Sirf <code>/s/yourID</code> extract hota hai →{' '}
-                <strong>https://teraboxlinke.com/s/yourID</strong>
+                Supported share / Terabox style links short ho kar panel me save hoti hain.
               </p>
               {urlError && (
                 <p className={styles.errorText} style={{ display: 'block' }}>
@@ -323,7 +322,6 @@ function Links() {
                     <th>Date</th>
                     <th>Short URL</th>
                     <th>Original URL</th>
-                    <th>Code</th>
                     <th>Clicks</th>
                     <th>Actions</th>
                   </tr>
@@ -331,7 +329,7 @@ function Links() {
                 <tbody>
                   {telegramLinks.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className={styles.emptyCell}>
+                      <td colSpan="5" className={styles.emptyCell}>
                         <div className={styles.guidedEmpty}>
                           <p className={styles.guidedTitle}>No Telegram links yet</p>
                           <p className={styles.guidedText}>
@@ -368,7 +366,6 @@ function Links() {
                             {item.originalUrl || 'N/A'}
                           </span>
                         </td>
-                        <td>{item.code || 'N/A'}</td>
                         <td>{item.clicks || 0}</td>
                         <td>
                           <button
@@ -416,7 +413,6 @@ function Links() {
                     <th>Date</th>
                     <th>Short URL</th>
                     <th>Original URL</th>
-                    <th>Code</th>
                     <th>Clicks</th>
                     <th>Actions</th>
                   </tr>
@@ -424,11 +420,11 @@ function Links() {
                 <tbody>
                   {webLinks.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className={styles.emptyCell}>
+                      <td colSpan="5" className={styles.emptyCell}>
                         <div className={styles.guidedEmpty}>
                           <p className={styles.guidedTitle}>No web short links yet</p>
                           <p className={styles.guidedText}>
-                            Upar form me <code>/s/ID</code> wali URL paste karke Generate karo.
+                            Upar form me long URL paste karke Generate karo.
                           </p>
                           <button
                             type="button"
@@ -454,7 +450,6 @@ function Links() {
                             {item.originalUrl}
                           </span>
                         </td>
-                        <td>{item.code}</td>
                         <td>{item.clicks || 0}</td>
                         <td>
                           <button
