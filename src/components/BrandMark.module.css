@@ -1,0 +1,9 @@
+.mark {
+  display: block;
+  flex-shrink: 0;
+  width: auto;
+  height: auto;
+  border-radius: 22%;
+  object-fit: cover;
+  box-shadow: 0 4px 14px rgba(0, 132, 255, 0.35);
+}

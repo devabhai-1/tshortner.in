@@ -6,10 +6,10 @@ function PWAInstallPrompt() {
   const [isVisible, setIsVisible] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
+  const [hint, setHint] = useState('');
   const laterTimeoutRef = useRef(null);
 
   useEffect(() => {
-    // Check if already installed
     const checkInstalled = () => {
       if (window.matchMedia('(display-mode: standalone)').matches) {
         setIsInstalled(true);
@@ -22,31 +22,28 @@ function PWAInstallPrompt() {
       return;
     }
 
-    // Show popup after delay on initial load
+    const dismissed = sessionStorage.getItem('tshortner_pwa_dismissed') === '1';
+
+    // Fallback tip (iOS / browsers without beforeinstallprompt)
     const showPopup = setTimeout(() => {
-      // Check again if installed (state might have changed)
-      if (!window.matchMedia('(display-mode: standalone)').matches) {
+      if (
+        !dismissed &&
+        !window.matchMedia('(display-mode: standalone)').matches
+      ) {
         setIsVisible(true);
       }
-    }, 1500);
+    }, 2500);
 
-    let promptEvent = null;
-
-    // Listen for beforeinstallprompt event
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault();
-      promptEvent = e;
       setDeferredPrompt(e);
-      // Popup already showing via timeout, just ensure it's visible
-      setIsVisible(true);
+      if (!dismissed) setIsVisible(true);
     };
 
-    // Listen for app installed event
     const handleAppInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
       setIsVisible(false);
-      // Clear any pending timeouts
       if (laterTimeoutRef.current) {
         clearTimeout(laterTimeoutRef.current);
         laterTimeoutRef.current = null;
@@ -66,95 +63,99 @@ function PWAInstallPrompt() {
     };
   }, []);
 
+  const closeBanner = () => {
+    setIsClosing(true);
+    setTimeout(() => {
+      setIsVisible(false);
+      setIsClosing(false);
+      setHint('');
+    }, 300);
+  };
+
   const handleInstall = async () => {
     if (deferredPrompt) {
       try {
-        // Show the install prompt
         deferredPrompt.prompt();
-
-        // Wait for user response
         const { outcome } = await deferredPrompt.userChoice;
-
         if (outcome === 'accepted') {
           setIsInstalled(true);
-          // Clear any pending timeouts
           if (laterTimeoutRef.current) {
             clearTimeout(laterTimeoutRef.current);
             laterTimeoutRef.current = null;
           }
         }
-
         setDeferredPrompt(null);
-      } catch (error) {
-        // If native prompt fails, show manual instructions
-        alert('App install karne ke liye browser menu se "Add to Home Screen" ya "Install App" option use karein.');
+        closeBanner();
+        return;
+      } catch {
+        setHint('Browser menu → Install app / Add to Home Screen');
+        return;
       }
-    } else {
-      // If no deferredPrompt, show manual instructions
-      alert('App install karne ke liye:\n\nMobile: Browser menu (3 dots) → "Add to Home Screen"\nDesktop: Address bar me install icon click karein');
     }
 
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsVisible(false);
-      setIsClosing(false);
-    }, 300);
+    setHint('Mobile: ⋮ menu → Add to Home Screen · Desktop: address bar install icon');
   };
 
   const handleLater = () => {
-    // Close popup
-    setIsClosing(true);
-    setTimeout(() => {
-      setIsVisible(false);
-      setIsClosing(false);
-    }, 300);
+    try {
+      sessionStorage.setItem('tshortner_pwa_dismissed', '1');
+    } catch {
+      /* ignore */
+    }
+    closeBanner();
 
-    // Clear any existing timeout
     if (laterTimeoutRef.current) {
       clearTimeout(laterTimeoutRef.current);
     }
 
-    // Show popup again after 30 seconds
     laterTimeoutRef.current = setTimeout(() => {
-      // Check if still not installed before showing
       if (!window.matchMedia('(display-mode: standalone)').matches) {
+        try {
+          sessionStorage.removeItem('tshortner_pwa_dismissed');
+        } catch {
+          /* ignore */
+        }
         setIsVisible(true);
       } else {
         setIsInstalled(true);
       }
       laterTimeoutRef.current = null;
-    }, 30000); // 30 seconds
+    }, 60000);
   };
 
-  // Don't show if already installed
   if (isInstalled) {
     return null;
   }
 
-  // Always show popup (will be visible after timeout)
   if (!isVisible && !isClosing) {
     return null;
   }
 
   return (
-    <div className={`${styles.pwaPopup} ${isVisible ? styles.show : ''} ${isClosing ? styles.closing : ''}`}>
+    <div
+      className={`${styles.pwaPopup} ${isVisible ? styles.show : ''} ${isClosing ? styles.closing : ''}`}
+    >
       <div className={styles.pwaContent}>
-        <div className={styles.pwaIcon}>📱</div>
+        <div className={styles.pwaIconWrap}>
+          <img
+            src="/icon-192x192.png"
+            alt=""
+            width={48}
+            height={48}
+            className={styles.pwaLogo}
+          />
+        </div>
         <div className={styles.pwaText}>
-          <strong>TShortner App Install</strong>
-          <span>Offline use aur fast access ke liye install karein.</span>
+          <strong>Install TShortner</strong>
+          <span>
+            {hint || 'Home screen pe add karo — fast access with app logo.'}
+          </span>
         </div>
         <div className={styles.pwaButtons}>
-          <button 
-            className={styles.installBtn}
-            onClick={handleInstall}
-          >
+          <button type="button" className={styles.installBtn} onClick={handleInstall}>
             Install
           </button>
-          <button 
-            className={styles.laterBtn}
-            onClick={handleLater}
-          >
+          <button type="button" className={styles.laterBtn} onClick={handleLater}>
             Later
           </button>
         </div>

@@ -1,5 +1,6 @@
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import BrandMark from './BrandMark';
 import styles from './Navbar.module.css';
 
 function Navbar({ subtitle = 'Premium Dashboard' }) {
@@ -20,17 +21,9 @@ function Navbar({ subtitle = 'Premium Dashboard' }) {
     <header className={styles.navbar}>
       <div className={styles.navInner}>
         <div className={styles.navLeft}>
-          <div className={styles.logoCircle}>
-            <svg viewBox="0 0 512 512" className={styles.logoSvgIcon}>
-              <g transform="translate(256, 256) rotate(-45)">
-                <path d="M -16,-48 H 64 A 48,48 0 0,1 64,48 H -16" fill="none" stroke="#FFFFFF" strokeWidth="44" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M 16,48 H -64 A 48,48 0 0,1 -64,-48 H 16" fill="none" stroke="#FFFFFF" strokeWidth="44" strokeLinecap="round" strokeLinejoin="round"/>
-                <line x1="-40" y1="0" x2="40" y2="0" stroke="#FFFFFF" strokeWidth="44" strokeLinecap="round"/>
-              </g>
-            </svg>
-          </div>
+          <BrandMark size={40} className={styles.logoMark} />
           <div className={styles.brandText}>
-            <span className={styles.brandTitle}>TeraBox Shortener</span>
+            <span className={styles.brandTitle}>TShortner</span>
             <span className={styles.brandSub}>{subtitle}</span>
           </div>
         </div>

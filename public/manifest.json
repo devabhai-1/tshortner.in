@@ -1,44 +1,64 @@
 {
-  "name": "TShortner - URL Shortener Panel",
+  "name": "TShortner",
   "short_name": "TShortner",
-  "description": "Professional URL shortening service with advanced analytics and link management",
-  "start_url": "/",
+  "description": "URL shortener panel — short links, stats, and wallet in one place.",
+  "start_url": "/dashboard",
+  "id": "/",
   "display": "standalone",
-  "background_color": "#0f0f1e",
-  "theme_color": "#22c55e",
+  "background_color": "#ffffff",
+  "theme_color": "#0084FF",
   "orientation": "portrait-primary",
   "scope": "/",
+  "lang": "en",
   "icons": [
     {
       "src": "/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
-  "categories": ["productivity", "utilities"],
+  "categories": ["productivity", "utilities", "business"],
   "shortcuts": [
     {
       "name": "Dashboard",
       "short_name": "Dashboard",
       "description": "Open Dashboard",
       "url": "/dashboard",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
     },
     {
       "name": "Links",
       "short_name": "Links",
       "description": "Manage Links",
       "url": "/links",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Wallet",
+      "short_name": "Wallet",
+      "description": "Open Wallet",
+      "url": "/wallet",
+      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
     }
   ],
-  "screenshots": [],
   "prefer_related_applications": false
 }

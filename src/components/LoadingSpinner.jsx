@@ -18,7 +18,7 @@ function LoadingSpinner({ message = 'Loading...' }) {
           
           {/* Center Logo */}
           <div className={styles.logoCenter}>
-            <span>T</span>
+            <img src="/favicon.svg" alt="" width={36} height={36} className={styles.logoCenterImg} />
           </div>
           
           {/* Orbiting Circles - Outer Ring */}

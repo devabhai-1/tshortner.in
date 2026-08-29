@@ -46,83 +46,10 @@
   gap: 0.75rem;
 }
 
-.logoCircle {
+.logoMark {
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #0084ff 0%, #0052d4 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 
-    0 4px 15px rgba(0, 132, 255, 0.5),
-    0 0 30px rgba(0, 82, 212, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  position: relative;
-  overflow: hidden;
-}
-
-.logoCircle::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #0084ff, #0052d4, #00a3ff, #0040c0);
-  filter: blur(8px);
-  opacity: 0.7;
-  z-index: -1;
-  animation: logoGlowRotate 3s linear infinite;
-}
-
-.logoSvgIcon {
-  width: 22px;
-  height: 22px;
-  z-index: 2;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
-}
-
-@keyframes logoGlowRotate {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-[data-theme="light"] .logoCircle {
-  background: linear-gradient(135deg, #0084ff 0%, #0066ff 40%, #0052d4 100%);
-  box-shadow: 
-    0 4px 20px rgba(0, 132, 255, 0.45),
-    0 0 30px rgba(0, 82, 212, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  animation: premiumGlow 3s ease-in-out infinite;
-}
-
-[data-theme="light"] .logoCircle::before {
-  background: linear-gradient(135deg, #0084ff, #0066ff, #0052d4, #0099ff);
-}
-
-.logoCircle:hover {
-  transform: rotateY(180deg) scale(1.1) rotateZ(5deg);
-}
-
-.logoCircle span {
-  display: none; /* Hide old span, using ::after instead */
-}
-
-@keyframes premiumGlow {
-  0%, 100% {
-    box-shadow: 
-      0 4px 20px rgba(0, 132, 255, 0.45),
-      0 0 30px rgba(0, 82, 212, 0.3);
-  }
-  50% {
-    box-shadow: 
-      0 4px 30px rgba(0, 132, 255, 0.65),
-      0 0 50px rgba(0, 82, 212, 0.5);
-  }
 }
 
 .brandText {
@@ -270,13 +197,9 @@
     padding: 0.5rem 0.9rem;
   }
   
-  .logoCircle {
+  .logoMark {
     width: 36px;
     height: 36px;
-  }
-  
-  .logoCircle::after {
-    font-size: 1.1rem;
   }
   
   .brandTitle {
@@ -314,13 +237,9 @@
     gap: 0.5rem;
   }
   
-  .logoCircle {
+  .logoMark {
     width: 32px;
     height: 32px;
-  }
-  
-  .logoCircle::after {
-    font-size: 1rem;
   }
   
   .brandTitle {

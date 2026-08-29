@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import BrandMark from '../components/BrandMark';
 import styles from './Home.module.css';
 
 function Home() {
@@ -52,7 +53,7 @@ function Home() {
       <header className={styles.topNav}>
         <div className={styles.topNavInner}>
           <div className={styles.brand}>
-            <div className={styles.brandLogo}></div>
+            <BrandMark size={42} className={styles.brandLogoImg} />
             <div>
               <div className={styles.brandTextMain}>TShortner</div>
               <div className={styles.brandTextSub}>Smart URL &amp; Earning Panel</div>

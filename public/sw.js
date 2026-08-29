@@ -1,14 +1,18 @@
 // Service Worker — TShortner PWA
 // Bump CACHE_NAME on each deploy so activate() drops old Cache Storage buckets.
-const CACHE_NAME = 'tshortner-v6-shell';
+const CACHE_NAME = 'tshortner-v7-shell';
 
 const PRECACHE_URLS = [
   '/',
   '/index.html',
   '/manifest.json',
   '/favicon.svg',
+  '/favicon-32x32.png',
+  '/apple-touch-icon.png',
   '/icon-192x192.png',
   '/icon-512x512.png',
+  '/icon-192x192-maskable.png',
+  '/icon-512x512-maskable.png',
 ];
 
 function isSameOrigin(url) {
