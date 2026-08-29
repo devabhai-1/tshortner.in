@@ -98,52 +98,11 @@ export default function DashboardGateModals({
               <span className={styles.noticeIcon} aria-hidden>
                 📢
               </span>
-              <h3 id="welcome-title">TShortner — Important Notice</h3>
+              <h3 id="welcome-title">TShortner</h3>
             </div>
 
             <div className={styles.noticeBlock}>
-              <p className={styles.noticeLang}>English</p>
-              <p className={styles.noticeText}>
-                From <strong>16 August, 2:00 PM</strong>, Shortner traffic is being sent to your{' '}
-                <strong>original links</strong>. After 2 PM this is already live.
-              </p>
-              <p className={styles.noticeText}>
-                Shortner will be under update for <strong>2–3 days</strong>. After the update it
-                will start again. Until then <strong>there will be no earning</strong>.
-              </p>
-              <p className={styles.noticeText}>
-                Join <a href="https://firoplay.com" target="_blank" rel="noopener noreferrer">firoplay.com</a>{' '}
-                and get <strong>$3 CPM</strong>.
-              </p>
-              <p className={styles.noticeText}>
-                All pending payments will be completed on <strong>25 August</strong>. Please submit
-                your <strong>withdrawal</strong> now. After 25 August, regular payments will be on
-                time.
-              </p>
-            </div>
-
-            <div className={styles.noticeDivider} aria-hidden />
-
-            <div className={styles.noticeBlock}>
-              <p className={styles.noticeLang}>हिंदी</p>
-              <p className={styles.noticeText}>
-                <strong>16 August, 2 baje</strong> se Shortner traffic aapke{' '}
-                <strong>original link</strong> par bhej diya ja raha hai. 2 baje ke baad ye already
-                chalu hai.
-              </p>
-              <p className={styles.noticeText}>
-                Shortner <strong>2–3 din</strong> tak update hoga. Update ke baad wapas chalu ho
-                jayega. Tab tak <strong>earning nahi hogi</strong>.
-              </p>
-              <p className={styles.noticeText}>
-                <a href="https://firoplay.com" target="_blank" rel="noopener noreferrer">firoplay.com</a>{' '}
-                ke saath aao — <strong>$3 CPM</strong> pa sakte ho.
-              </p>
-              <p className={styles.noticeText}>
-                Sabhi ke payment <strong>25 August</strong> ko complete honge. Apna{' '}
-                <strong>withdrawal</strong> abhi laga do. 25 ke baad regular payments time par hone
-                lagenge.
-              </p>
+              <p className={styles.noticeText}>tshortner is live</p>
             </div>
 
             <button type="button" className={styles.secondaryBtn} onClick={onDismissWelcome}>
