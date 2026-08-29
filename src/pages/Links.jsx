@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ref, get } from 'firebase/database';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
@@ -24,6 +24,8 @@ function Links() {
   const [outputShort, setOutputShort] = useState('');
   const [outputNote, setOutputNote] = useState('');
   const [lastShortUrlForCopy, setLastShortUrlForCopy] = useState('');
+  const [copyToast, setCopyToast] = useState('');
+  const copyToastTimer = useRef(null);
 
   const extractCodeFromUrl = (url) => {
     const match = url.match(/\/s\/([a-zA-Z0-9_-]+)/);
@@ -138,20 +140,26 @@ function Links() {
     setSubmitting(false);
   };
 
+  const showCopyToast = (msg) => {
+    setCopyToast(msg);
+    if (copyToastTimer.current) window.clearTimeout(copyToastTimer.current);
+    copyToastTimer.current = window.setTimeout(() => setCopyToast(''), 2200);
+  };
+
   const copyToClipboard = (text) => {
     if (!text) return;
     navigator.clipboard.writeText(text).then(
-      () => alert('Copied: ' + text),
-      () => alert('Copy nahi ho paya, manually copy karein.')
-    ).catch(() => alert('Copy nahi ho paya, manually copy karein.'));
+      () => showCopyToast('Copied'),
+      () => showCopyToast('Copy failed — manually select'),
+    ).catch(() => showCopyToast('Copy failed — manually select'));
   };
 
   const copyShortOut = () => {
     if (!lastShortUrlForCopy) return;
     navigator.clipboard.writeText(lastShortUrlForCopy).then(
-      () => alert('Short URL copied:\n' + lastShortUrlForCopy),
-      () => alert('Copy nahi ho paya, manually copy karein.')
-    ).catch(() => alert('Copy nahi ho paya, manually copy karein.'));
+      () => showCopyToast('Short URL copied'),
+      () => showCopyToast('Copy failed — manually select'),
+    ).catch(() => showCopyToast('Copy failed — manually select'));
   };
 
   const openBot = (url) => {
@@ -169,11 +177,16 @@ function Links() {
   return (
     <Layout activeNav="links">
       <div className={styles.mainInner}>
-        {/* Title */}
+        {copyToast ? (
+          <div className={styles.copyToast} role="status" aria-live="polite">
+            {copyToast}
+          </div>
+        ) : null}
+
         <div className={styles.pageTitle}>
           <div>
             <h1>Links</h1>
-            <p>Yahin se tum Telegram bots + web shortner dono control karoge.</p>
+            <p>Telegram bots + web shortner — yahi se short links banao aur track karo.</p>
           </div>
           <div className={styles.tagSmall}>
             <span className={styles.tagDot}></span>
@@ -181,93 +194,115 @@ function Links() {
           </div>
         </div>
 
-        {loadError && <div className={styles.errorText} style={{ display: 'block', marginBottom: '1rem' }}>{loadError}</div>}
-
-        {/* Telegram Bots */}
-        <section className={styles.card} style={{ marginBottom: '1rem' }}>
-          <h2 style={{ fontSize: '0.95rem' }}>Telegram Bots</h2>
-          <p style={{ fontSize: '0.78rem', color: '#9ca3af', marginTop: '0.15rem' }}>
-            In bots ke through tum Telegram par hi links bhejoge, aur ye panel ke iss account se linked rahenge.
-          </p>
-
-          <div className={styles.botGrid}>
-            <div className={styles.botCard}>
-              <h3>ShortEarn Bot #1</h3>
-              <p>Basic shortener bot – jo bhi Terabox link milega usko is panel ke under track karega.</p>
-              <button
-                type="button"
-                className={styles.btnSecondary}
-                onClick={() => openBot('https://t.me/TShortnerbot')}
-              >
-                🤖 Open Bot 1
-              </button>
-            </div>
-
-            <div className={styles.botCard}>
-              <h3>ShortEarn Bot #2</h3>
-              <p>High traffic / premium setup ke liye – multiple channels ya groups handle karne ke liye.</p>
-              <button
-                type="button"
-                className={styles.btnSecondary}
-                onClick={() => openBot('https://t.me/TShortner1bot')}
-              >
-                🤖 Open Bot 2
-              </button>
-            </div>
+        {loadError && (
+          <div className={styles.errorText} style={{ display: 'block', marginBottom: '1rem' }}>
+            {loadError}
           </div>
-        </section>
+        )}
 
-        {/* Web Shortner */}
-        <section className={styles.card}>
-          <h2 style={{ fontSize: '0.95rem', marginBottom: '0.7rem' }}>
-            Web Shortner (Terabox ID Tracker)
-          </h2>
+        {/* Web Shortner — primary */}
+        <section className={`${styles.card} ${styles.createPrimary}`}>
+          <div className={styles.createHead}>
+            <div>
+              <h2>Create web short link</h2>
+              <p>URL me <code>/s/ID</code> hona chahiye — system us ID ko teraboxlinke.com pe map karega.</p>
+            </div>
+            <span className={styles.badgeSoft}>Web</span>
+          </div>
 
-          <form onSubmit={handleSubmit}>
+          <div className={styles.helperChips} aria-label="URL pattern examples">
+            <span className={styles.chip}>…/s/yourID</span>
+            <span className={styles.chip}>teraboxlinke.com/s/…</span>
+            <span className={styles.chip}>Any domain with /s/</span>
+          </div>
+
+          <form onSubmit={handleSubmit} className={styles.createForm}>
             <div className={styles.field}>
-              <label htmlFor="webUrl">Koi bhi link paste karo (Terabox ya koi bhi domain)</label>
+              <label htmlFor="webUrl">Paste long URL</label>
               <input
                 id="webUrl"
                 type="url"
                 value={webUrl}
                 onChange={(e) => setWebUrl(e.target.value)}
-                placeholder="https://example.com/s/hjfvshgvgfgfggafs ya similar"
+                placeholder="https://example.com/s/hjfvshgvgfgfggafs"
                 required
               />
               <p className={styles.hintText}>
-                System sirf URL ke andar ka <code>/s/yourID</code> part nikaalega aur
-                usko <strong>https://teraboxlinke.com/s/yourID</strong> me convert karega.
+                Sirf <code>/s/yourID</code> extract hota hai →{' '}
+                <strong>https://teraboxlinke.com/s/yourID</strong>
               </p>
-              {urlError && <p className={styles.errorText} style={{ display: 'block' }}>{urlError}</p>}
+              {urlError && (
+                <p className={styles.errorText} style={{ display: 'block' }}>
+                  {urlError}
+                </p>
+              )}
             </div>
 
             <button type="submit" className={styles.btnPrimary} disabled={submitting}>
-              <span className={styles.icon}>⚡</span>
-              <span>{submitting ? 'Saving...' : 'Generate & Save Short Link'}</span>
+              <span>{submitting ? 'Saving…' : 'Generate & Save Short Link'}</span>
             </button>
           </form>
 
-          {/* Outputs - EXACT same as HTML */}
           {showOutput && (
-            <div className={styles.outputsGrid} style={{ display: 'grid' }}>
-              <div className={styles.outputBox}>
-                <div className={styles.outputLabel}>Original URL</div>
-                <div className={styles.outputValue}>{outputOriginal}</div>
+            <div className={styles.resultCard}>
+              <div className={styles.resultBadge}>Ready</div>
+              <div className={styles.resultShortBlock}>
+                <span className={styles.resultLabel}>Your short URL</span>
+                <p className={styles.resultShortUrl}>{outputShort}</p>
+                <div className={styles.resultActions}>
+                  <button className={styles.btnPrimary} type="button" onClick={copyShortOut}>
+                    Copy short URL
+                  </button>
+                  <button
+                    className={styles.btnSecondary}
+                    type="button"
+                    onClick={() => window.open(outputShort, '_blank')}
+                  >
+                    Open
+                  </button>
+                </div>
               </div>
-              <div className={styles.outputBox}>
-                <div className={styles.outputLabel}>Short URL (teraboxlinke.com)</div>
-                <div className={styles.outputValue}>{outputShort}</div>
-                <button
-                  className={styles.copyMini}
-                  type="button"
-                  onClick={copyShortOut}
-                >
-                  Copy Short URL
-                </button>
+              <div className={styles.resultMeta}>
+                <span className={styles.resultLabel}>Original</span>
+                <p className={styles.resultOriginal}>{outputOriginal}</p>
               </div>
+              {outputNote ? <p className={styles.note}>{outputNote}</p> : null}
             </div>
           )}
-          {outputNote && <p className={styles.note}>{outputNote}</p>}
+        </section>
+
+        {/* Telegram Bots */}
+        <section className={styles.card} style={{ marginBottom: '1rem' }}>
+          <h2 className={styles.sectionH2}>Telegram Bots</h2>
+          <p className={styles.sectionSub}>
+            Bots se Telegram par link bhejo — ye isi account ke under track honge.
+          </p>
+
+          <div className={styles.botGrid}>
+            <div className={styles.botCard} id="bot1">
+              <h3>ShortEarn Bot #1</h3>
+              <p>Basic shortener — Terabox links is panel se track.</p>
+              <button
+                type="button"
+                className={styles.btnSecondary}
+                onClick={() => openBot('https://t.me/TShortnerbot')}
+              >
+                Open Bot 1
+              </button>
+            </div>
+
+            <div className={styles.botCard} id="bot2">
+              <h3>ShortEarn Bot #2</h3>
+              <p>High traffic / multiple channels ke liye.</p>
+              <button
+                type="button"
+                className={styles.btnSecondary}
+                onClick={() => openBot('https://t.me/TShortner1bot')}
+              >
+                Open Bot 2
+              </button>
+            </div>
+          </div>
         </section>
 
         {/* Telegram Links Table */}
@@ -275,9 +310,7 @@ function Links() {
           <div className={styles.sectionTitle}>
             <div>
               <h2>Saved Telegram Links</h2>
-              <span>
-                Ye links RTDB me <code>users/&lt;emailKey&gt;/links/telegram/list</code> me save hote hain.
-              </span>
+              <span>Bot se create kiye links yahan list hote hain.</span>
             </div>
             <span className={styles.badgeSoft}>{telegramLinks.length} links</span>
           </div>
@@ -298,21 +331,58 @@ function Links() {
                 <tbody>
                   {telegramLinks.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className={styles.textSoft}>
-                        Abhi tak koi telegram link save nahi hua.
+                      <td colSpan="6" className={styles.emptyCell}>
+                        <div className={styles.guidedEmpty}>
+                          <p className={styles.guidedTitle}>No Telegram links yet</p>
+                          <p className={styles.guidedText}>
+                            Bot 1 ya Bot 2 kholo, link bhejo — saved links yahan dikhenge.
+                          </p>
+                          <div className={styles.guidedActions}>
+                            <button
+                              type="button"
+                              className={styles.btnSecondary}
+                              onClick={() => openBot('https://t.me/TShortnerbot')}
+                            >
+                              Open Bot 1
+                            </button>
+                            <button
+                              type="button"
+                              className={styles.btnSecondary}
+                              onClick={() => openBot('https://t.me/TShortner1bot')}
+                            >
+                              Open Bot 2
+                            </button>
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   ) : (
                     telegramLinks.map((item) => (
                       <tr key={item.id || item.createdAt}>
                         <td>{formatDateFromTs(item.createdAt || Date.now())}</td>
-                        <td><span className={styles.urlShort}>{item.shortUrl || 'N/A'}</span></td>
-                        <td><span className={styles.urlMain} title={item.originalUrl}>{item.originalUrl || 'N/A'}</span></td>
+                        <td>
+                          <span className={styles.urlShort}>{item.shortUrl || 'N/A'}</span>
+                        </td>
+                        <td>
+                          <span className={styles.urlMain} title={item.originalUrl}>
+                            {item.originalUrl || 'N/A'}
+                          </span>
+                        </td>
                         <td>{item.code || 'N/A'}</td>
                         <td>{item.clicks || 0}</td>
                         <td>
-                          <button className={styles.btnXs} onClick={() => copyToClipboard(item.shortUrl || '')}>Copy</button>
-                          <button className={styles.btnXs} onClick={() => window.open(item.shortUrl || '', '_blank')}>Open</button>
+                          <button
+                            className={styles.btnXs}
+                            onClick={() => copyToClipboard(item.shortUrl || '')}
+                          >
+                            Copy
+                          </button>
+                          <button
+                            className={styles.btnXs}
+                            onClick={() => window.open(item.shortUrl || '', '_blank')}
+                          >
+                            Open
+                          </button>
                         </td>
                       </tr>
                     ))
@@ -321,9 +391,9 @@ function Links() {
               </table>
             </div>
             <p className={styles.note}>
-              {telegramLinks.length > 0 
+              {telegramLinks.length > 0
                 ? `Latest ${telegramLinks.length} telegram links.`
-                : 'Abhi tak koi telegram link save nahi hua.'}
+                : 'Bot se pehla link banao — list auto update hogi.'}
             </p>
           </div>
         </section>
@@ -333,10 +403,7 @@ function Links() {
           <div className={styles.sectionTitle}>
             <div>
               <h2>Saved Web Links</h2>
-              <span>
-                Ye links RTDB me <code>users/&lt;emailKey&gt;/links/website/list</code>
-                + global <code>allLinks/&lt;code&gt;</code> me save hote hain.
-              </span>
+              <span>Web shortner se save hue links.</span>
             </div>
             <span className={styles.badgeSoft}>{webLinks.length} links</span>
           </div>
@@ -357,21 +424,51 @@ function Links() {
                 <tbody>
                   {webLinks.length === 0 ? (
                     <tr>
-                      <td colSpan="6" className={styles.textSoft}>
-                        Abhi tak koi web short link save nahi hua.
+                      <td colSpan="6" className={styles.emptyCell}>
+                        <div className={styles.guidedEmpty}>
+                          <p className={styles.guidedTitle}>No web short links yet</p>
+                          <p className={styles.guidedText}>
+                            Upar form me <code>/s/ID</code> wali URL paste karke Generate karo.
+                          </p>
+                          <button
+                            type="button"
+                            className={styles.btnPrimary}
+                            onClick={() =>
+                              document.getElementById('webUrl')?.focus()
+                            }
+                          >
+                            Paste URL above
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ) : (
                     webLinks.map((item) => (
                       <tr key={item.id || item.createdAt}>
                         <td>{formatDateFromTs(item.createdAt || Date.now())}</td>
-                        <td><span className={styles.urlShort}>{item.shortUrl}</span></td>
-                        <td><span className={styles.urlMain} title={item.originalUrl}>{item.originalUrl}</span></td>
+                        <td>
+                          <span className={styles.urlShort}>{item.shortUrl}</span>
+                        </td>
+                        <td>
+                          <span className={styles.urlMain} title={item.originalUrl}>
+                            {item.originalUrl}
+                          </span>
+                        </td>
                         <td>{item.code}</td>
                         <td>{item.clicks || 0}</td>
                         <td>
-                          <button className={styles.btnXs} onClick={() => copyToClipboard(item.shortUrl)}>Copy</button>
-                          <button className={styles.btnXs} onClick={() => window.open(item.shortUrl, '_blank')}>Open</button>
+                          <button
+                            className={styles.btnXs}
+                            onClick={() => copyToClipboard(item.shortUrl)}
+                          >
+                            Copy
+                          </button>
+                          <button
+                            className={styles.btnXs}
+                            onClick={() => window.open(item.shortUrl, '_blank')}
+                          >
+                            Open
+                          </button>
                         </td>
                       </tr>
                     ))
@@ -380,9 +477,9 @@ function Links() {
               </table>
             </div>
             <p className={styles.note}>
-              {webLinks.length > 0 
+              {webLinks.length > 0
                 ? `Latest ${webLinks.length} web links.`
-                : 'Abhi tak koi web short link save nahi hua.'}
+                : 'Generate & Save se pehla web link add karo.'}
             </p>
           </div>
         </section>

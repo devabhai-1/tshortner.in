@@ -117,6 +117,181 @@
   margin-bottom: 1.5rem;
 }
 
+.statsEnter .card {
+  animation: dashCardIn 0.55s var(--ease-premium) both;
+}
+
+.statsEnter .card:nth-child(1) { animation-delay: 0.02s; }
+.statsEnter .card:nth-child(2) { animation-delay: 0.06s; }
+.statsEnter .card:nth-child(3) { animation-delay: 0.1s; }
+.statsEnter .card:nth-child(4) { animation-delay: 0.14s; }
+.statsEnter .card:nth-child(5) { animation-delay: 0.18s; }
+.statsEnter .card:nth-child(6) { animation-delay: 0.22s; }
+
+@keyframes dashCardIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statsEnter .card {
+    animation: none;
+  }
+}
+
+.chartEmpty {
+  position: relative;
+  margin-top: 0.75rem;
+  min-height: 320px;
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--border-soft);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(180deg, rgba(0, 132, 255, 0.06), transparent 55%),
+    repeating-linear-gradient(
+      -12deg,
+      transparent,
+      transparent 14px,
+      rgba(148, 163, 184, 0.06) 14px,
+      rgba(148, 163, 184, 0.06) 15px
+    );
+}
+
+.chartEmptyGlow {
+  position: absolute;
+  inset: 20% 15%;
+  background: radial-gradient(ellipse, rgba(0, 132, 255, 0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.chartEmptyInner {
+  position: relative;
+  z-index: 1;
+  max-width: 420px;
+  padding: 1.5rem 1.25rem;
+  text-align: center;
+}
+
+.chartEmptyTitle {
+  margin: 0 0 0.4rem;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.chartEmptyText {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--text-soft);
+}
+
+.guideSteps {
+  margin: 0 0 1.1rem;
+  padding-left: 1.15rem;
+  text-align: left;
+  font-size: 0.82rem;
+  line-height: 1.55;
+  color: var(--text-soft);
+}
+
+.guideSteps a {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.chartEmptyActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+}
+
+.primaryCta,
+.secondaryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.55rem 1rem;
+  border-radius: 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.25s var(--ease-premium), box-shadow 0.25s ease;
+}
+
+.primaryCta {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid transparent;
+}
+
+.primaryCta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 132, 255, 0.35);
+}
+
+.secondaryCta {
+  background: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border-soft);
+}
+
+.secondaryCta:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.emptyTableCell {
+  padding: 0 !important;
+}
+
+.guidedEmpty {
+  padding: 1.35rem 1rem;
+  text-align: center;
+}
+
+.guidedEmptyTitle {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.guidedEmptyText {
+  margin: 0 0 0.85rem;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+.guideMini {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  justify-content: center;
+  margin-bottom: 0.95rem;
+}
+
+.guideMini span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.28rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  color: var(--text-soft);
+  background: var(--bg-soft);
+}
+
 .card {
   background: var(--card-bg);
   border-radius: var(--radius-lg);

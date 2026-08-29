@@ -102,7 +102,10 @@ export default function DashboardGateModals({
             </div>
 
             <div className={styles.noticeBlock}>
-              <p className={styles.noticeText}>tshortner is live</p>
+              <p className={styles.noticeText}>
+                <strong>TShortner is live.</strong> Links se pehla short link banao, traffic share
+                karo, earning Dashboard par dikhegi. Withdraw Wallet se — minimum $10.
+              </p>
             </div>
 
             <button type="button" className={styles.secondaryBtn} onClick={onDismissWelcome}>

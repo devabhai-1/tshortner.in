@@ -482,3 +482,93 @@ tbody tr:hover {
     grid-template-columns: 1fr;
   }
 }
+
+.formBannerErr,
+.formBannerOk {
+  margin: 0.75rem 0 0;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.65rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  font-weight: 600;
+}
+
+.formBannerErr {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fecaca;
+}
+
+[data-theme='light'] .formBannerErr {
+  background: rgba(220, 38, 38, 0.08);
+  color: #b91c1c;
+}
+
+.formBannerOk {
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.4);
+  color: #bbf7d0;
+}
+
+[data-theme='light'] .formBannerOk {
+  background: rgba(5, 150, 105, 0.1);
+  color: #047857;
+}
+
+.emptyCell {
+  padding: 0 !important;
+}
+
+.guidedEmpty {
+  padding: 1.35rem 1rem;
+  text-align: center;
+}
+
+.guidedTitle {
+  margin: 0 0 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.guidedText {
+  margin: 0 0 0.9rem;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+  line-height: 1.5;
+}
+
+.statusLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 0.9rem;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.statusLegend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.statusLegend i {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.dotPending {
+  background: #fbbf24;
+}
+
+.dotPaid {
+  background: #22c55e;
+}
+
+.dotRejected {
+  background: #f87171;
+}

@@ -49,7 +49,6 @@ function Home() {
 
   return (
     <div className={styles.page}>
-      {/* Top Navbar */}
       <header className={styles.topNav}>
         <div className={styles.topNavInner}>
           <div className={styles.brand}>
@@ -61,98 +60,80 @@ function Home() {
           </div>
 
           <nav className={styles.topNavLinks}>
-            <Link to="/">Home</Link>
             <Link to="/login">Login</Link>
             <Link to="/signup">Signup</Link>
-            <Link to="/dashboard" className={styles.navCta}>Open Dashboard</Link>
+            <Link to="/dashboard" className={styles.navCta}>
+              Dashboard
+            </Link>
           </nav>
         </div>
       </header>
 
-      {/* Top Intro Text */}
-      <section className={styles.topIntro}>
-        <h2 className={styles.topIntroTitle}>Apne traffic ko real earning me convert karo</h2>
-        <p className={styles.topIntroText}>
-          TShortner aapke long links ko ek organized earning system banata hai –
-          jahan har click track hota hai, stats clear hote hain, aur sab kuch ek hi panel se control hota hai.
-        </p>
-      </section>
-
-      {/* TOP LOGIN CARD */}
-      <div className={styles.wrapper}>
-        <div className={styles.card}>
-          <div className={styles.logo}>
-            <span>S</span>
-          </div>
-
-          <h1>Shortner Panel</h1>
-          <p className={styles.subtitle}>
-            Apne लंबे links ko short karo, track karo aur earning manage karo – sab yahi se.
+      <section className={styles.hero}>
+        <div className={styles.heroBg} aria-hidden />
+        <div className={styles.heroInner}>
+          <p className={styles.heroBrand}>TShortner</p>
+          <h1 className={styles.heroTitle}>Traffic ko tracked earning me badlo</h1>
+          <p className={styles.heroText}>
+            Short links, live stats, aur wallet — ek panel se. Share karo, clicks track
+            hote hain, payout clear rehta hai.
           </p>
 
-          <div className={styles.btnGroup}>
-            <Link to="/login" className={`${styles.btnLink} ${styles.btn} ${styles.btnPrimary}`}>
-              🔐 Login
-            </Link>
-            <Link to="/signup" className={`${styles.btnLink} ${styles.btn} ${styles.btnOutline}`}>
-              ✨ Create Account
-            </Link>
-
-            <button 
-              type="button" 
-              className={`${styles.btn} ${styles.btnGoogle}`}
+          <div className={styles.heroCtas}>
+            <button
+              type="button"
+              className={`${styles.btn} ${styles.btnGoogle} ${styles.heroGoogle}`}
               onClick={handleGoogleLogin}
               disabled={googleLoading}
             >
               <span className={styles.g}>G</span>
-              <span>{googleLoading ? 'Connecting...' : 'Sign in with Google'}</span>
+              <span>{googleLoading ? 'Connecting…' : 'Continue with Google'}</span>
             </button>
+            <div className={styles.heroSecondary}>
+              <Link to="/login" className={`${styles.btnLink} ${styles.btn} ${styles.btnPrimary}`}>
+                Login
+              </Link>
+              <Link to="/signup" className={`${styles.btnLink} ${styles.btn} ${styles.btnOutline}`}>
+                Create account
+              </Link>
+            </div>
           </div>
 
-          {msg && (
-            <div className={`${styles.msg} ${msgType === 'error' ? styles.error : styles.success}`}>
+          {msg ? (
+            <div
+              className={`${styles.msg} ${msgType === 'error' ? styles.error : styles.success}`}
+            >
               {msg}
             </div>
-          )}
+          ) : null}
 
-          <p className={styles.miniText}>
-            Google se login karoge to email select karte hi account create ho jayega
-            (agar pehle nahi bana). Agar pehle se data hai to wahi load hoga.
+          <p className={styles.heroMini}>
+            Google se pehli baar login = account auto create. Purana data same email pe load
+            hota hai.
           </p>
         </div>
-      </div>
+      </section>
 
-      {/* Info Section */}
       <section className={styles.infoSectionWrapper}>
-        <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-          <div className={styles.btnGroup} style={{ justifyContent: 'center', gap: '1rem', flexDirection: 'row', flexWrap: 'wrap' }}>
-            <Link to="/signup" className={`${styles.btnLink} ${styles.btn} ${styles.btnPrimary}`} style={{ padding: '1.2rem 2.5rem', fontSize: '1.15rem', fontWeight: '700' }}>
-              ✨ Create Account
-            </Link>
-            <Link to="/login" className={`${styles.btnLink} ${styles.btn} ${styles.btnOutline}`} style={{ padding: '1.2rem 2.5rem', fontSize: '1.15rem', fontWeight: '700' }}>
-              🔐 Login
-            </Link>
-          </div>
-        </div>
         <div>
           <h2 className={styles.infoSectionTitle}>Shortner Kya Hai?</h2>
           <p className={styles.infoSectionSubtitle}>
-            Long URLs ko short, trackable aur earning wale links me convert karein. 
-            Ek centralized panel se sab control karein – Telegram, WhatsApp, website, social media sabke liye.
+            Long URLs ko short, trackable aur earning wale links me convert karein. Ek
+            panel se Telegram, WhatsApp, website — sab control.
           </p>
         </div>
 
         <div className={styles.infoSectionGrid}>
-          {/* Left Section - Concept */}
           <div className={styles.infoCard}>
-            <h2>📌 Shortner Kaise Kaam Karta Hai?</h2>
-            
+            <h2>Shortner Kaise Kaam Karta Hai?</h2>
+
             <div className={styles.conceptStep}>
               <div className={styles.stepNumber}>1</div>
               <div className={styles.stepContent}>
                 <h3>Long URL Dalte Hain</h3>
                 <p>
-                  Aap apna long URL (movie link, file link, Terabox link, ya koi bhi link) paste karte hain.
+                  Aap apna long URL (movie link, file link, Terabox link, ya koi bhi link)
+                  paste karte hain.
                 </p>
               </div>
             </div>
@@ -162,8 +143,8 @@ function Home() {
               <div className={styles.stepContent}>
                 <h3>Short Link Generate Hota Hai</h3>
                 <p>
-                  System automatically ek <strong>chhota, clean aur branded short link</strong> bana deta hai 
-                  jo professional lagta hai aur share karna easy hota hai.
+                  System automatically ek <strong>chhota, clean short link</strong> bana deta
+                  hai jo share karna easy hota hai.
                 </p>
               </div>
             </div>
@@ -173,8 +154,8 @@ function Home() {
               <div className={styles.stepContent}>
                 <h3>Track &amp; Redirect</h3>
                 <p>
-                  Jab koi user short link par click karta hai, system pehle 
-                  <strong> impression aur click track</strong> karta hai, phir user ko original URL par safely redirect kar deta hai.
+                  Click par system pehle <strong>impression track</strong> karta hai, phir
+                  original URL par redirect.
                 </p>
               </div>
             </div>
@@ -182,28 +163,22 @@ function Home() {
             <div className={styles.benefitsSection}>
               <h3 className={styles.benefitsTitle}>Kyun Use Karein?</h3>
               <ul className={styles.infoList}>
-                <li>Clean &amp; Professional Short Links</li>
-                <li>Har Click ka Complete Record</li>
-                <li>Real-time Stats Dashboard</li>
-                <li>Alag Sources ke Performance Track</li>
-                <li>Secure &amp; Fast Backend</li>
+                <li>Clean short links</li>
+                <li>Har click ka record</li>
+                <li>Real-time dashboard</li>
+                <li>Source-wise performance</li>
+                <li>Fast &amp; secure</li>
               </ul>
-            </div>
-
-            <div className={styles.infoHighlightBox}>
-              <span>Key Point:</span> Long URLs ugly lagte hain, track nahi hote. 
-              Shortner se aapke links professional ban jate hain aur har click properly track hota hai.
             </div>
           </div>
 
-          {/* Right Section - Earning */}
           <div className={styles.infoCard}>
-            <h2>💰 Earning System</h2>
-            
+            <h2>Earning System</h2>
+
             <div className={styles.earningExplanation}>
               <p>
-                <strong>CPM (Cost Per Mille)</strong> ke base par earning hoti hai. 
-                Simple me: <strong>har 1000 valid views par aapko payout milta hai.</strong>
+                <strong>CPM</strong> ke base par earning —{' '}
+                <strong>har 1000 valid views</strong> par payout.
               </p>
             </div>
 
@@ -211,9 +186,7 @@ function Home() {
               <div className={styles.stepNumber}>1</div>
               <div className={styles.stepContent}>
                 <h3>Click Track</h3>
-                <p>
-                  User aapke short link par click karta hai. System automatically track karta hai.
-                </p>
+                <p>User short link par click karta hai — system track karta hai.</p>
               </div>
             </div>
 
@@ -221,10 +194,7 @@ function Home() {
               <div className={styles.stepNumber}>2</div>
               <div className={styles.stepContent}>
                 <h3>Impression Count</h3>
-                <p>
-                  Valid traffic (real users) ko count kiya jata hai. 
-                  Fake, bot, ya invalid traffic filter ho jata hai.
-                </p>
+                <p>Valid traffic count; fake / bot filter.</p>
               </div>
             </div>
 
@@ -233,26 +203,19 @@ function Home() {
               <div className={styles.stepContent}>
                 <h3>Earning Add</h3>
                 <p>
-                  Har valid impression aapki earning me add hota hai. 
-                  Dashboard me <strong>daily earning, total earning, CPM</strong> sab clearly dikhta hai.
+                  Valid impressions earning me add — daily / total / CPM dashboard me clear.
                 </p>
               </div>
             </div>
 
             <div className={styles.benefitsSection}>
-              <h3 className={styles.benefitsTitle}>Important Points</h3>
+              <h3 className={styles.benefitsTitle}>Important</h3>
               <ul className={styles.infoList}>
-                <li>Sirf Valid Traffic Count Hoti Hai</li>
-                <li>CPM Rate Quality ke Base Par Hoti Hai</li>
-                <li>Real-time Dashboard me Sab Stats</li>
-                <li>Quality Traffic = Stable Earning</li>
-                <li>Long-term Earning Possible</li>
+                <li>Sirf valid traffic</li>
+                <li>CPM quality pe depend</li>
+                <li>Live stats</li>
+                <li>Quality = stable earn</li>
               </ul>
-            </div>
-
-            <div className={styles.infoHighlightBox}>
-              <span>Tip:</span> Quality traffic lao – slow &amp; steady growth se account safe rahega 
-              aur earning stable &amp; long-term banegi.
             </div>
           </div>
         </div>
@@ -391,13 +354,13 @@ function Home() {
 
       {/* FOOTER */}
       <footer className={styles.miniFooter}>
-        © <span>{new Date().getFullYear()}</span> Shortner Panel
+        © <span>{new Date().getFullYear()}</span> TShortner
         <div style={{ marginTop: '0.5rem' }}>
           <Link to="/privacy">Privacy Policy</Link> •
           <Link to="/terms">Terms & Conditions</Link>
         </div>
         <div className={styles.footerSmallText}>
-          Safe & Legal Short-Link Platform – High Quality Traffic Only.
+          Safe short-link panel — quality traffic only.
         </div>
       </footer>
     </div>

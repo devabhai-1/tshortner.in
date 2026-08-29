@@ -33,8 +33,12 @@ function Wallet() {
   const [ifscCode, setIfscCode] = useState('');
   const [accountHolderName, setAccountHolderName] = useState('');
   const [amountError, setAmountError] = useState('');
+  const [formError, setFormError] = useState('');
+  const [formSuccess, setFormSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [withdrawNote, setWithdrawNote] = useState('Note: abhi ye Firebase ke wallet node se connected hai. Request bhejne par currentBalance → kam, pendingBalance → badhega, aur request list me "pending" status ke saath save hogi.');
+  const [withdrawNote, setWithdrawNote] = useState(
+    'Request ke baad amount Available se Pending me chala jata hai. Admin approve → Paid.',
+  );
   const [walletError, setWalletError] = useState('');
 
   const mapStatusClass = (status) => {
@@ -117,6 +121,8 @@ function Wallet() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setAmountError('');
+    setFormError('');
+    setFormSuccess('');
 
     const amountVal = parseFloat(amount || "0");
 
@@ -132,27 +138,30 @@ function Wallet() {
       setAmountError("Itna balance available nahi hai. Max: $" + formatMoney(walletState.currentBalance));
       return;
     }
-    // Validation based on method
     if (method === 'Bank') {
       if (!bankName.trim()) {
-        alert("Bank name required hai.");
+        setFormError("Bank name required hai.");
         return;
       }
       if (!accountNumber.trim()) {
-        alert("Account number required hai.");
+        setFormError("Account number required hai.");
         return;
       }
       if (!ifscCode.trim()) {
-        alert("IFSC code required hai.");
+        setFormError("IFSC code required hai.");
         return;
       }
       if (!accountHolderName.trim()) {
-        alert("Account holder name required hai.");
+        setFormError("Account holder name required hai.");
         return;
       }
     } else {
       if (!account.trim()) {
-        alert("Payment ID (UPI ID / Binance UID / Wallet) required hai.");
+        setFormError(
+          method === 'UPI'
+            ? 'UPI ID required hai.'
+            : 'Binance UID / wallet address required hai.',
+        );
         return;
       }
     }
@@ -162,7 +171,6 @@ function Wallet() {
     try {
       const emailKey = emailToKey(user.email);
       
-      // 1. Calculate fees and new balances
       let requestAmount = amountVal;
       let deductedAmount = amountVal;
       let fee = 0;
@@ -178,7 +186,6 @@ function Wallet() {
       const newCurrent = walletState.currentBalance - deductedAmount;
       const newPending = walletState.pendingBalance + requestAmount;
 
-      // 2. Create request
       const reqRef = ref(db, "users/" + emailKey + "/wallet/withdrawalRequests");
       const newRef = push(reqRef);
       
@@ -192,7 +199,6 @@ function Wallet() {
         feeAmount: fee,
         method,
         account: method === 'Bank' ? `${accountHolderName.trim()} - ${bankName.trim()}` : account.trim(),
-        // Bank-specific fields
         ...(method === 'Bank' && {
           bankName: bankName.trim(),
           accountNumber: accountNumber.trim(),
@@ -203,32 +209,25 @@ function Wallet() {
 
       await set(newRef, item);
 
-      // 3. Update balances
       const walletRef = ref(db, "users/" + emailKey + "/wallet");
       await update(walletRef, {
         currentBalance: newCurrent,
         pendingBalance: newPending
       });
 
-      // 4. Reload data (EXACT same as HTML)
       await loadWallet(emailKey);
       
       setWithdrawNote("Request submit ho gayi. Admin approve karega to status Pending → Paid ho jayega.");
       
-      // Alert message (EXACT same as HTML)
       const accountDisplay = method === 'Bank' 
         ? `${accountHolderName.trim()} - ${bankName.trim()}` 
         : account.trim();
-      alert(
-        "Withdraw Request Submitted\n\n" +
-        "Amount Deducted: $" + formatMoney(deductedAmount) + "\n" +
-        (method === 'Binance' ? "Fee (4%): $" + formatMoney(fee) + "\n" + "Amount Requested: $" + formatMoney(requestAmount) + "\n" : "") +
-        "Method: " + method + "\n" +
-        "Account: " + accountDisplay + "\n\n" +
-        "Balance update ho chuka hai. Ab request Pending me hai."
+      setFormSuccess(
+        `Submitted · deducted $${formatMoney(deductedAmount)}` +
+          (method === 'Binance' ? ` · fee $${formatMoney(fee)} · net $${formatMoney(requestAmount)}` : '') +
+          ` · ${method} · ${accountDisplay}`,
       );
       
-      // Reset form - keep method, reset amount and bank fields
       setAmount(walletState.currentBalance > 0 ? formatMoney(walletState.currentBalance) : '0.00');
       if (method === 'Bank') {
         setBankName('');
@@ -241,7 +240,7 @@ function Wallet() {
       
     } catch (err) {
       console.error(err);
-      alert("Withdraw request save karte waqt error: " + (err.code || err.message));
+      setFormError("Withdraw request save karte waqt error: " + (err.code || err.message));
     }
 
     setSubmitting(false);
@@ -343,7 +342,7 @@ function Wallet() {
                   value={method}
                   onChange={(e) => {
                     setMethod(e.target.value);
-                    // Clear fields when method changes
+                    setFormError('');
                     setAccount('');
                     setBankName('');
                     setAccountNumber('');
@@ -439,11 +438,12 @@ function Wallet() {
               )}
 
               <button type="submit" className={styles.btnPrimary} disabled={submitting}>
-                <span className={styles.icon}>💸</span>
-                <span>{submitting ? 'Submitting...' : 'Submit Withdraw Request'}</span>
+                <span>{submitting ? 'Submitting…' : 'Submit Withdraw Request'}</span>
               </button>
             </form>
 
+            {formError ? <p className={styles.formBannerErr}>{formError}</p> : null}
+            {formSuccess ? <p className={styles.formBannerOk}>{formSuccess}</p> : null}
             <p className={styles.withdrawNote}>{withdrawNote}</p>
           </div>
 
@@ -452,7 +452,7 @@ function Wallet() {
             <div className={styles.cardHeader}>
               <div>
                 <h2>Payout History</h2>
-                <span>Recent withdraw requests (live from wallet.withdrawalRequests).</span>
+                <span>Recent withdraw requests · live status.</span>
               </div>
             </div>
 
@@ -470,8 +470,25 @@ function Wallet() {
                 <tbody>
                   {history.length === 0 ? (
                     <tr>
-                      <td colSpan="5" className={styles.textSoft}>
-                        Abhi tak koi withdraw request nahi hai.
+                      <td colSpan="5" className={styles.emptyCell}>
+                        <div className={styles.guidedEmpty}>
+                          <p className={styles.guidedTitle}>No withdraw requests yet</p>
+                          <p className={styles.guidedText}>
+                            Minimum payout <strong>${formatMoney(MIN_WITHDRAW_USD)}</strong>. Left
+                            form se request bhejo — yahan status dikhega.
+                          </p>
+                          <div className={styles.statusLegend}>
+                            <span>
+                              <i className={styles.dotPending} /> Pending — review
+                            </span>
+                            <span>
+                              <i className={styles.dotPaid} /> Paid — sent
+                            </span>
+                            <span>
+                              <i className={styles.dotRejected} /> Rejected — returned
+                            </span>
+                          </div>
+                        </div>
                       </td>
                     </tr>
                   ) : (
@@ -508,7 +525,7 @@ function Wallet() {
             <p className={styles.note}>
               {history.length > 0 
                 ? `Latest ${history.length} withdraw requests.`
-                : 'Abhi tak koi withdraw request nahi hai.'}
+                : 'Status: Pending → Paid / Rejected.'}
             </p>
           </div>
         </section>

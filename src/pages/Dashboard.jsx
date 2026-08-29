@@ -4,7 +4,7 @@ import { ref, get, update } from 'firebase/database';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import { emailToKey, formatMoney, formatNumber, formatDateLabel } from '../firebase/utils';
-import { ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine } from 'recharts';
+import { ComposedChart, Area, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Layout from '../components/Layout';
 import LoadingSpinner from '../components/LoadingSpinner';
 import DashboardGateModals from '../components/DashboardGateModals';
@@ -217,16 +217,21 @@ function Dashboard() {
 
         <aside className={styles.siteNotice} role="status">
           <div className={styles.siteNoticeHead}>
-            <span aria-hidden>📢</span>
-            <strong>Notice</strong>
+            <span aria-hidden>●</span>
+            <strong>TShortner is live</strong>
           </div>
-          <p>tshortner is live</p>
+          <p>
+            Panel ready hai. Pehla short link{' '}
+            <Link to="/links">Links</Link> se banao, traffic share karo, phir earning yahan
+            dikhegi. Withdraw{' '}
+            <Link to="/wallet">Wallet</Link> se ($10 min).
+          </p>
         </aside>
 
         {error && <div className={styles.error}>{error}</div>}
 
         {/* TOP STATS (6 CARDS) */}
-        <section className={styles.statsGrid}>
+        <section className={`${styles.statsGrid} ${styles.statsEnter}`}>
           {/* Daily Earning */}
           <div className={`${styles.card} ${styles.highlightCard}`}>
             <div className={styles.highlightBg}></div>
@@ -287,126 +292,200 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* CHART SECTION - Last 10 Days */}
-        {dailyData.length > 0 && (
-          <section className={styles.chartSection}>
-            <div className={styles.card}>
-              <div className={styles.sectionTitle}>
-                <div>
-                  <h2>📊 Performance Analytics (Last 10 Days)</h2>
-                  <span>Real-time daily earnings & impressions analytics breakdown.</span>
-                </div>
-                <span className={styles.badgeGreen}>⚡ Live 10-Day Metrics</span>
+        {/* CHART SECTION - Last 10 Days (or guided placeholder when empty) */}
+        <section className={styles.chartSection}>
+          <div className={styles.card}>
+            <div className={styles.sectionTitle}>
+              <div>
+                <h2>Performance Analytics (Last 10 Days)</h2>
+                <span>
+                  {dailyData.length > 0
+                    ? 'Real-time daily earnings & impressions analytics breakdown.'
+                    : 'Yahan aapke last 10 din ka earning chart dikhega jab traffic start hoga.'}
+                </span>
               </div>
-
-              {/* Indicator Summary Pills */}
-              <div className={styles.chartHeaderStats}>
-                <div className={styles.statPill}>
-                  <span className={styles.statPillLabel}>Peak Earning Day</span>
-                  <span className={`${styles.statPillVal} ${styles.greenVal}`}>${formatMoney(chartStats10.peakEarning)}</span>
-                </div>
-                <div className={styles.statPill}>
-                  <span className={styles.statPillLabel}>Peak Impressions</span>
-                  <span className={`${styles.statPillVal} ${styles.blueVal}`}>{formatNumber(chartStats10.peakViews)}</span>
-                </div>
-                <div className={styles.statPill}>
-                  <span className={styles.statPillLabel}>10-Day Total Earning</span>
-                  <span className={`${styles.statPillVal} ${styles.purpleVal}`}>${formatMoney(chartStats10.total10Earning)}</span>
-                </div>
-              </div>
-
-              <div className={styles.chartWrapper}>
-                <ResponsiveContainer width="100%" height={isMobile ? 340 : 420} minHeight={isMobile ? 340 : 420}>
-                  <ComposedChart
-                    data={chartDataLast10}
-                    margin={{ top: 20, right: 24, left: 0, bottom: isMobile ? 40 : 20 }}
-                  >
-                    <defs>
-                      <linearGradient id="earningGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#10b981" stopOpacity={0.45}/>
-                        <stop offset="60%" stopColor="#059669" stopOpacity={0.12}/>
-                        <stop offset="100%" stopColor="#047857" stopOpacity={0.0}/>
-                      </linearGradient>
-                      <linearGradient id="impressionsGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.35}/>
-                        <stop offset="60%" stopColor="#1d4ed8" stopOpacity={0.10}/>
-                        <stop offset="100%" stopColor="#1e40af" stopOpacity={0.0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="4 4" stroke="var(--border-soft)" opacity={0.18} vertical={false} />
-                    <XAxis 
-                      dataKey="date" 
-                      stroke="var(--text-soft)"
-                      tick={{ fontSize: isMobile ? 10 : 12, fill: 'var(--text-soft)', fontWeight: 600 }}
-                      axisLine={{ stroke: 'var(--border-soft)', opacity: 0.4 }}
-                      tickLine={false}
-                      interval={0}
-                      tickMargin={10}
-                    />
-                    <YAxis 
-                      yAxisId="left"
-                      stroke="#10b981"
-                      tick={{ fontSize: isMobile ? 10 : 11, fill: '#10b981', fontWeight: 600 }}
-                      width={48}
-                      axisLine={false}
-                      tickLine={false}
-                      domain={['auto', 'auto']}
-                      tickFormatter={(v) => `$${Number(v).toFixed(1)}`}
-                      allowDecimals={true}
-                    />
-                    <YAxis 
-                      yAxisId="right"
-                      orientation="right"
-                      stroke="#3b82f6"
-                      tick={{ fontSize: isMobile ? 10 : 11, fill: '#3b82f6', fontWeight: 600 }}
-                      width={48}
-                      axisLine={false}
-                      tickLine={false}
-                      domain={['auto', 'auto']}
-                      tickFormatter={(v) => `${Number(v).toFixed(1)}K`}
-                      allowDecimals={true}
-                    />
-                    <Tooltip content={<CustomChartTooltip />} cursor={{ stroke: '#10b981', strokeWidth: 1.5, strokeDasharray: '4 4' }} />
-                    <Legend 
-                      wrapperStyle={{ fontSize: isMobile ? '0.78rem' : '0.88rem', paddingTop: '1.2rem', fontWeight: 700 }}
-                      iconSize={12}
-                      iconType="circle"
-                    />
-                    <Area 
-                      yAxisId="left"
-                      type="monotone" 
-                      dataKey="earning" 
-                      fill="url(#earningGradient)"
-                      stroke="#10b981" 
-                      strokeWidth={3}
-                      name="Daily Earning ($)"
-                      isAnimationActive={true}
-                      animationDuration={600}
-                      dot={{ r: 4, fill: '#10b981', stroke: '#ffffff', strokeWidth: 1.5 }}
-                      activeDot={{ r: 7, fill: '#10b981', stroke: '#ffffff', strokeWidth: 3 }}
-                    />
-                    <Line 
-                      yAxisId="right"
-                      type="monotone" 
-                      dataKey="impressions" 
-                      stroke="#3b82f6" 
-                      strokeWidth={3}
-                      dot={{ r: 4, fill: '#3b82f6', stroke: '#ffffff', strokeWidth: 1.5 }}
-                      name="Impressions (K)"
-                      isAnimationActive={true}
-                      animationDuration={600}
-                      activeDot={{ r: 7, fill: '#3b82f6', stroke: '#ffffff', strokeWidth: 3 }}
-                    />
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-
-              <p className={styles.note}>
-                Chart me last 10 din ka daily earning (USD) aur impressions (thousands me) dikhaya gaya hai.
-              </p>
+              {dailyData.length > 0 ? (
+                <span className={styles.badgeGreen}>Live 10-Day Metrics</span>
+              ) : (
+                <span className={styles.badge}>Waiting for data</span>
+              )}
             </div>
-          </section>
-        )}
+
+            {dailyData.length > 0 ? (
+              <>
+                <div className={styles.chartHeaderStats}>
+                  <div className={styles.statPill}>
+                    <span className={styles.statPillLabel}>Peak Earning Day</span>
+                    <span className={`${styles.statPillVal} ${styles.greenVal}`}>
+                      ${formatMoney(chartStats10.peakEarning)}
+                    </span>
+                  </div>
+                  <div className={styles.statPill}>
+                    <span className={styles.statPillLabel}>Peak Impressions</span>
+                    <span className={`${styles.statPillVal} ${styles.blueVal}`}>
+                      {formatNumber(chartStats10.peakViews)}
+                    </span>
+                  </div>
+                  <div className={styles.statPill}>
+                    <span className={styles.statPillLabel}>10-Day Total Earning</span>
+                    <span className={`${styles.statPillVal} ${styles.purpleVal}`}>
+                      ${formatMoney(chartStats10.total10Earning)}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={styles.chartWrapper}>
+                  <ResponsiveContainer
+                    width="100%"
+                    height={isMobile ? 340 : 420}
+                    minHeight={isMobile ? 340 : 420}
+                  >
+                    <ComposedChart
+                      data={chartDataLast10}
+                      margin={{ top: 20, right: 24, left: 0, bottom: isMobile ? 40 : 20 }}
+                    >
+                      <defs>
+                        <linearGradient id="earningGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#10b981" stopOpacity={0.45} />
+                          <stop offset="60%" stopColor="#059669" stopOpacity={0.12} />
+                          <stop offset="100%" stopColor="#047857" stopOpacity={0.0} />
+                        </linearGradient>
+                        <linearGradient id="impressionsGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#3b82f6" stopOpacity={0.35} />
+                          <stop offset="60%" stopColor="#1d4ed8" stopOpacity={0.1} />
+                          <stop offset="100%" stopColor="#1e40af" stopOpacity={0.0} />
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid
+                        strokeDasharray="4 4"
+                        stroke="var(--border-soft)"
+                        opacity={0.18}
+                        vertical={false}
+                      />
+                      <XAxis
+                        dataKey="date"
+                        stroke="var(--text-soft)"
+                        tick={{
+                          fontSize: isMobile ? 10 : 12,
+                          fill: 'var(--text-soft)',
+                          fontWeight: 600,
+                        }}
+                        axisLine={{ stroke: 'var(--border-soft)', opacity: 0.4 }}
+                        tickLine={false}
+                        interval={0}
+                        tickMargin={10}
+                      />
+                      <YAxis
+                        yAxisId="left"
+                        stroke="#10b981"
+                        tick={{
+                          fontSize: isMobile ? 10 : 11,
+                          fill: '#10b981',
+                          fontWeight: 600,
+                        }}
+                        width={48}
+                        axisLine={false}
+                        tickLine={false}
+                        domain={['auto', 'auto']}
+                        tickFormatter={(v) => `$${Number(v).toFixed(1)}`}
+                        allowDecimals={true}
+                      />
+                      <YAxis
+                        yAxisId="right"
+                        orientation="right"
+                        stroke="#3b82f6"
+                        tick={{
+                          fontSize: isMobile ? 10 : 11,
+                          fill: '#3b82f6',
+                          fontWeight: 600,
+                        }}
+                        width={48}
+                        axisLine={false}
+                        tickLine={false}
+                        domain={['auto', 'auto']}
+                        tickFormatter={(v) => `${Number(v).toFixed(1)}K`}
+                        allowDecimals={true}
+                      />
+                      <Tooltip
+                        content={<CustomChartTooltip />}
+                        cursor={{
+                          stroke: '#10b981',
+                          strokeWidth: 1.5,
+                          strokeDasharray: '4 4',
+                        }}
+                      />
+                      <Legend
+                        wrapperStyle={{
+                          fontSize: isMobile ? '0.78rem' : '0.88rem',
+                          paddingTop: '1.2rem',
+                          fontWeight: 700,
+                        }}
+                        iconSize={12}
+                        iconType="circle"
+                      />
+                      <Area
+                        yAxisId="left"
+                        type="monotone"
+                        dataKey="earning"
+                        fill="url(#earningGradient)"
+                        stroke="#10b981"
+                        strokeWidth={3}
+                        name="Daily Earning ($)"
+                        isAnimationActive={true}
+                        animationDuration={600}
+                        dot={{ r: 4, fill: '#10b981', stroke: '#ffffff', strokeWidth: 1.5 }}
+                        activeDot={{ r: 7, fill: '#10b981', stroke: '#ffffff', strokeWidth: 3 }}
+                      />
+                      <Line
+                        yAxisId="right"
+                        type="monotone"
+                        dataKey="impressions"
+                        stroke="#3b82f6"
+                        strokeWidth={3}
+                        dot={{ r: 4, fill: '#3b82f6', stroke: '#ffffff', strokeWidth: 1.5 }}
+                        name="Impressions (K)"
+                        isAnimationActive={true}
+                        animationDuration={600}
+                        activeDot={{ r: 7, fill: '#3b82f6', stroke: '#ffffff', strokeWidth: 3 }}
+                      />
+                    </ComposedChart>
+                  </ResponsiveContainer>
+                </div>
+
+                <p className={styles.note}>
+                  Chart me last 10 din ka daily earning (USD) aur impressions (thousands me) dikhaya
+                  gaya hai.
+                </p>
+              </>
+            ) : (
+              <div className={styles.chartEmpty}>
+                <div className={styles.chartEmptyGlow} aria-hidden />
+                <div className={styles.chartEmptyInner}>
+                  <p className={styles.chartEmptyTitle}>Analytics ready — waiting for traffic</p>
+                  <p className={styles.chartEmptyText}>
+                    Short link banao, share karo. Impressions aate hi yahan 10-day chart live ho
+                    jayega.
+                  </p>
+                  <ol className={styles.guideSteps}>
+                    <li>
+                      <Link to="/links">Links</Link> par jaake web / Telegram short link banao
+                    </li>
+                    <li>Link ko apne audience ke saath share karo</li>
+                    <li>Views + earning yahan auto update honge</li>
+                  </ol>
+                  <div className={styles.chartEmptyActions}>
+                    <Link to="/links" className={styles.primaryCta}>
+                      Create first link
+                    </Link>
+                    <Link to="/support/manage" className={styles.secondaryCta}>
+                      Support / Telegram
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* DAILY BREAKDOWN */}
         <section>
@@ -432,8 +511,21 @@ function Dashboard() {
                 <tbody>
                   {dailyData.length === 0 ? (
                     <tr>
-                      <td colSpan="4" className={styles.textSoft}>
-                        Abhi daily stats empty hain. Jaise hi impressions/earning aayegi, yaha show hoga.
+                      <td colSpan="4" className={styles.emptyTableCell}>
+                        <div className={styles.guidedEmpty}>
+                          <p className={styles.guidedEmptyTitle}>Abhi koi daily row nahi</p>
+                          <p className={styles.guidedEmptyText}>
+                            Pehli impressions aate hi date-wise CPM aur earning yahan list hogi.
+                          </p>
+                          <div className={styles.guideMini}>
+                            <span>1. Create link</span>
+                            <span>2. Share</span>
+                            <span>3. Earn</span>
+                          </div>
+                          <Link to="/links" className={styles.primaryCta}>
+                            Go to Links
+                          </Link>
+                        </div>
                       </td>
                     </tr>
                   ) : (
@@ -456,8 +548,8 @@ function Dashboard() {
               {dailyData.length > 0
                 ? `Data loaded from your panel (last ${dailyData.length} days).`
                 : error
-                ? error
-                : 'Abhi daily stats empty hain. Jaise hi impressions/earning aayegi, yaha show hoga.'}
+                  ? error
+                  : 'Create link → share → earn. Stats auto fill honge.'}
             </p>
 
             {/* Options Below Table */}
