@@ -103,7 +103,7 @@ function Links() {
       return;
     }
 
-    const shortUrl = `https://teraboxlinke.com/s/${code}`;
+    const shortUrl = `https://open.tshortner.in/s/${code}`;
     setSubmitting(true);
 
     try {
