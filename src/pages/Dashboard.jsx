@@ -42,6 +42,27 @@ const CustomChartTooltip = ({ active, payload, label }) => {
   return null;
 };
 
+function kolkataDaysAgo(n) {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Kolkata',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date()).split('-').map(Number);
+  const date = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+  date.setUTCDate(date.getUTCDate() - n);
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(date.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+const COUNTRY_RANGES = [
+  { id: '1', label: 'Aaj', days: 1 },
+  { id: '7', label: '7 days', days: 7 },
+  { id: '30', label: '30 days', days: 30 },
+];
+
 function Dashboard() {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
@@ -61,6 +82,9 @@ function Dashboard() {
   const [dailyData, setDailyData] = useState([]);
   const [yesterdayEarning, setYesterdayEarning] = useState(0);
   const [copyFeedback, setCopyFeedback] = useState('');
+  const [countryRange, setCountryRange] = useState('1');
+  const [topCountries, setTopCountries] = useState([]);
+  const [countriesLoading, setCountriesLoading] = useState(false);
 
   // Handle window resize for mobile detection
   useEffect(() => {
@@ -141,6 +165,54 @@ function Dashboard() {
 
     loadDashboardData();
   }, [user]);
+
+  useEffect(() => {
+    if (!user?.email) return undefined;
+    const emailKey = emailToKey(user.email);
+    const days = COUNTRY_RANGES.find((item) => item.id === countryRange)?.days || 1;
+    let stop = false;
+    setCountriesLoading(true);
+    (async () => {
+      try {
+        const dates = Array.from({ length: days }, (_, index) => kolkataDaysAgo(index));
+        const snaps = await Promise.all(
+          dates.map((day) => get(ref(db, `realtimeTraffic/days/${day}/emails/${emailKey}/byCountry`))),
+        );
+        const totals = new Map();
+        snaps.forEach((snap) => {
+          const node = snap.val();
+          if (!node || typeof node !== 'object') return;
+          Object.entries(node).forEach(([code, row]) => {
+            if (!row || typeof row !== 'object') return;
+            const hits = Number(row.hits) || 0;
+            if (!hits) return;
+            const current = totals.get(code) || { code, name: row.country || row.name || code, hits: 0 };
+            current.hits += hits;
+            current.name = row.country || row.name || current.name;
+            totals.set(code, current);
+          });
+        });
+        const sum = Array.from(totals.values()).reduce((total, row) => total + row.hits, 0);
+        const ranked = Array.from(totals.values())
+          .sort((a, b) => b.hits - a.hits)
+          .slice(0, 7)
+          .map((row) => ({
+            code: row.code,
+            name: row.name,
+            pct: sum ? Math.round((row.hits / sum) * 1000) / 10 : 0,
+          }));
+        if (!stop) setTopCountries(ranked);
+      } catch (err) {
+        console.error('Country share load error:', err);
+        if (!stop) setTopCountries([]);
+      } finally {
+        if (!stop) setCountriesLoading(false);
+      }
+    })();
+    return () => {
+      stop = true;
+    };
+  }, [user, countryRange]);
 
   const needsTelegram = profileChecked && !telegramUsername;
 
@@ -290,6 +362,45 @@ function Dashboard() {
             <div className={styles.statValue}>$ {formatMoney(stats.withdrawnAmount)}</div>
             <div className={styles.statSub}>Jo paisa already aapke account me ja chuka hai.</div>
           </div>
+        </section>
+
+        <section className={styles.countryCard}>
+          <div className={styles.sectionTitle}>
+            <div>
+              <h2>Top countries</h2>
+              <span>Sabse zyada traffic wale 7 desh. Sirf share %.</span>
+            </div>
+            <div className={styles.countryRanges} role="tablist">
+              {COUNTRY_RANGES.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  className={countryRange === item.id ? styles.countryRangeActive : styles.countryRange}
+                  onClick={() => setCountryRange(item.id)}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+          </div>
+          {countriesLoading ? <p className={styles.countryEmpty}>Load ho raha hai...</p> : null}
+          {!countriesLoading && !topCountries.length ? (
+            <p className={styles.countryEmpty}>Is period mein abhi country traffic nahi hai.</p>
+          ) : null}
+          {!countriesLoading && topCountries.length ? (
+            <ol className={styles.countryList}>
+              {topCountries.map((row, index) => (
+                <li key={row.code}>
+                  <span className={styles.countryRank}>{index + 1}</span>
+                  <span className={styles.countryName}>{row.name}</span>
+                  <span className={styles.countryTrack}>
+                    <span style={{ width: `${Math.min(100, row.pct)}%` }} />
+                  </span>
+                  <strong>{row.pct}%</strong>
+                </li>
+              ))}
+            </ol>
+          ) : null}
         </section>
 
         {/* CHART SECTION - Last 10 Days (or guided placeholder when empty) */}
