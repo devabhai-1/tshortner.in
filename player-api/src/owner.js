@@ -1,5 +1,6 @@
 const FB_BASE =
   process.env.FIREBASE_DATABASE_URL ||
+  process.env.VITE_FIREBASE_DATABASE_URL ||
   'https://tshortner-in-default-rtdb.asia-southeast1.firebasedatabase.app'
 
 const cache = new Map()

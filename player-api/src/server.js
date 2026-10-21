@@ -1,10 +1,17 @@
-import 'dotenv/config'
+import dotenv from 'dotenv'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import cors from 'cors'
 import express from 'express'
 import crypto from 'node:crypto'
 import { ALLOWED_PLAYER_HOSTS, hostFromUrl, isAllowedPlayerHost, verifyPlayerDomain } from './domain.js'
 import { resolveOwner } from './owner.js'
 import { appendEvent, buildStats, initStore, readEvents } from './store.js'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+// Ek hi main .env: tshortner site/.env
+dotenv.config({ path: path.resolve(__dirname, '../../.env') })
+dotenv.config({ path: path.resolve(__dirname, '../.env') }) // fallback (optional local)
 
 const app = express()
 const PORT = Number(process.env.PORT || 8787)

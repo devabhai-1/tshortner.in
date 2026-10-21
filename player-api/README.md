@@ -6,12 +6,14 @@ Ye **Node.js** API sirf Player tracking ke liye hai.
 ## Run
 
 ```bash
-cd "tshortner site/player-api"
-cp .env.example .env
+cd "tshortner site"
+# keys sirf yahan: .env  (player-api alag .env nahi)
+cd player-api
 npm install
 npm start
 ```
 
+`server.js` parent `tshortner site/.env` load karta hai.  
 Default URL: `http://localhost:8787`
 
 ## Player.html me API URL
