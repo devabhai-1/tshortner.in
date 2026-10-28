@@ -271,6 +271,36 @@ function Dashboard() {
     [user],
   );
 
+  // Last 90 days: earning rows + live /t/ clicks by date
+  const dailyPerformanceRows = useMemo(() => {
+    const map = new Map();
+    dailyData.forEach(([dateKey, obj]) => {
+      map.set(dateKey, {
+        dateKey,
+        impressions: Number(obj?.impressions) || 0,
+        cpm: Number(obj?.cpm) || 0,
+        earning: Number(obj?.earning) || 0,
+        clicks: 0,
+      });
+    });
+    Object.entries(filterClicks.byDay || {}).forEach(([dateKey, n]) => {
+      const clicks = Number(n) || 0;
+      if (!clicks || !dateKey) return;
+      const prev = map.get(dateKey) || {
+        dateKey,
+        impressions: 0,
+        cpm: 0,
+        earning: 0,
+        clicks: 0,
+      };
+      prev.clicks = clicks;
+      map.set(dateKey, prev);
+    });
+    return Array.from(map.values())
+      .sort((a, b) => (a.dateKey < b.dateKey ? 1 : -1))
+      .slice(0, 90);
+  }, [dailyData, filterClicks.byDay]);
+
   const chartDataLast10 = useMemo(() => {
     if (!dailyData.length) return [];
     const last10 = dailyData.slice(0, 10).reverse();
@@ -514,18 +544,10 @@ function Dashboard() {
               <span className={styles.tClicksSub}>Total /t/ clicks</span>
             </div>
           </div>
-          <ul className={styles.tClicksDays} aria-label="Last 7 days /t/ clicks">
-            {Array.from({ length: 7 }, (_, i) => {
-              const day = kolkataDaysAgo(i);
-              const n = Number(filterClicks.byDay?.[day]) || 0;
-              return (
-                <li key={day}>
-                  <span>{i === 0 ? 'Today' : formatDateLabel(day)}</span>
-                  <strong>{formatNumber(n)}</strong>
-                </li>
-              );
-            })}
-          </ul>
+          <p className={styles.tClicksFoot}>
+            Date-wise clicks neeche <strong>Daily Performance (90 days)</strong> table me live
+            update hote rehte hain.
+          </p>
         </section>
 
         {/* TOP STATS (6 CARDS) */}
@@ -830,7 +852,9 @@ function Dashboard() {
             <div className={styles.sectionTitle}>
               <div>
                 <h2>Daily Performance (Last 90 Days)</h2>
-                <span>Roz ka data: impressions, daily CPM & daily earning.</span>
+                <span>
+                  Date-wise impressions, CPM, earning + live <code>/t/</code> clicks.
+                </span>
               </div>
               <span className={styles.badge}>Timezone: IST · Currency: USD</span>
             </div>
@@ -840,19 +864,20 @@ function Dashboard() {
                 <thead>
                   <tr>
                     <th>Date</th>
+                    <th>Clicks (/t/)</th>
                     <th>Impressions</th>
                     <th>Daily CPM ($)</th>
                     <th>Daily Earning ($)</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {dailyData.length === 0 ? (
+                  {dailyPerformanceRows.length === 0 ? (
                     <tr>
-                      <td colSpan="4" className={styles.emptyTableCell}>
+                      <td colSpan="5" className={styles.emptyTableCell}>
                         <div className={styles.guidedEmpty}>
                           <p className={styles.guidedEmptyTitle}>Abhi koi daily row nahi</p>
                           <p className={styles.guidedEmptyText}>
-                            Pehli impressions aate hi date-wise CPM aur earning yahan list hogi.
+                            /t/ clicks ya impressions aate hi date-wise yahan list hogi.
                           </p>
                           <div className={styles.guideMini}>
                             <span>1. Create link</span>
@@ -866,13 +891,16 @@ function Dashboard() {
                       </td>
                     </tr>
                   ) : (
-                    dailyData.map(([dateKey, obj]) => (
-                      <tr key={dateKey}>
-                        <td>{formatDateLabel(dateKey)}</td>
-                        <td>{formatNumber(obj.impressions || 0)}</td>
-                        <td>{formatMoney(obj.cpm || 0)}</td>
-                        <td className={(obj.earning || 0) > 0 ? styles.textGreen : ''}>
-                          {formatMoney(obj.earning || 0)}
+                    dailyPerformanceRows.map((row) => (
+                      <tr key={row.dateKey}>
+                        <td>{formatDateLabel(row.dateKey)}</td>
+                        <td className={row.clicks > 0 ? styles.textGreen : ''}>
+                          {formatNumber(row.clicks)}
+                        </td>
+                        <td>{formatNumber(row.impressions)}</td>
+                        <td>{formatMoney(row.cpm)}</td>
+                        <td className={row.earning > 0 ? styles.textGreen : ''}>
+                          {formatMoney(row.earning)}
                         </td>
                       </tr>
                     ))
@@ -882,8 +910,8 @@ function Dashboard() {
             </div>
 
             <p className={styles.note}>
-              {dailyData.length > 0
-                ? `Data loaded from your panel (last ${dailyData.length} days).`
+              {dailyPerformanceRows.length > 0
+                ? `Last ${dailyPerformanceRows.length} days · /t/ clicks live update.`
                 : error
                   ? error
                   : 'Create link → share → earn. Stats auto fill honge.'}
@@ -895,13 +923,14 @@ function Dashboard() {
                 className={styles.optionBtn}
                 onClick={() => {
                   const csv = [
-                    ['Date', 'Impressions', 'Daily CPM ($)', 'Daily Earning ($)'],
-                    ...dailyData.map(([dateKey, obj]) => [
-                      formatDateLabel(dateKey),
-                      obj.impressions || 0,
-                      obj.cpm || 0,
-                      obj.earning || 0
-                    ])
+                    ['Date', 'Clicks (/t/)', 'Impressions', 'Daily CPM ($)', 'Daily Earning ($)'],
+                    ...dailyPerformanceRows.map((row) => [
+                      formatDateLabel(row.dateKey),
+                      row.clicks,
+                      row.impressions,
+                      row.cpm,
+                      row.earning,
+                    ]),
                   ].map(row => row.join(',')).join('\n');
                   
                   const blob = new Blob([csv], { type: 'text/csv' });
@@ -912,7 +941,7 @@ function Dashboard() {
                   a.click();
                   window.URL.revokeObjectURL(url);
                 }}
-                disabled={dailyData.length === 0}
+                disabled={dailyPerformanceRows.length === 0}
               >
                 📥 Export CSV
               </button>
@@ -921,8 +950,8 @@ function Dashboard() {
                 onClick={async () => {
                   setCopyFeedback('');
                   try {
-                    const text = dailyData.map(([dateKey, obj]) => 
-                      `${formatDateLabel(dateKey)} | Impressions: ${formatNumber(obj.impressions || 0)} | CPM: $${formatMoney(obj.cpm || 0)} | Earning: $${formatMoney(obj.earning || 0)}`
+                    const text = dailyPerformanceRows.map((row) =>
+                      `${formatDateLabel(row.dateKey)} | Clicks(/t/): ${formatNumber(row.clicks)} | Impressions: ${formatNumber(row.impressions)} | CPM: $${formatMoney(row.cpm)} | Earning: $${formatMoney(row.earning)}`
                     ).join('\n');
                     await navigator.clipboard.writeText(text);
                     setCopyFeedback('Copied!');
@@ -932,7 +961,7 @@ function Dashboard() {
                     setTimeout(() => setCopyFeedback(''), 3000);
                   }
                 }}
-                disabled={dailyData.length === 0}
+                disabled={dailyPerformanceRows.length === 0}
               >
                 📋 Copy Data{copyFeedback ? ` — ${copyFeedback}` : ''}
               </button>
