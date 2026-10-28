@@ -186,7 +186,7 @@ function Links() {
         <div className={styles.pageTitle}>
           <div>
             <h1>Links</h1>
-            <p>Telegram bots + web shortner — yahi se short links banao aur track karo.</p>
+            <p>Web aur Telegram short links — create, copy, track.</p>
           </div>
           <div className={styles.tagSmall}>
             <span className={styles.tagDot}></span>

@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ref, get, set, update } from 'firebase/database';
+import { ref, get, set, update, onValue } from 'firebase/database';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import { emailToKey, formatMoney, formatNumber, formatDateLabel } from '../firebase/utils';
@@ -89,6 +89,13 @@ function Dashboard() {
   const [planUrl, setPlanUrl] = useState('');
   const [planSaving, setPlanSaving] = useState(false);
   const [planNote, setPlanNote] = useState('');
+  const [filterClicks, setFilterClicks] = useState({
+    total: 0,
+    daily: 0,
+    updatedAt: 0,
+    byDay: {},
+  });
+  const [filterClickPulse, setFilterClickPulse] = useState(false);
 
   // Handle window resize for mobile detection
   useEffect(() => {
@@ -172,6 +179,33 @@ function Dashboard() {
 
     loadDashboardData();
   }, [user]);
+
+  // Live /t/ clicks only (filter bot short links) — not /x or /v
+  useEffect(() => {
+    if (!user?.email) return undefined;
+    const emailKey = emailToKey(user.email);
+    const clicksRef = ref(db, `users/${emailKey}/filterClicks`);
+    let lastTotal = -1;
+    const unsub = onValue(clicksRef, (snap) => {
+      const v = snap.val() || {};
+      const today = kolkataDaysAgo(0);
+      const byDay = v.daily && typeof v.daily === 'object' ? v.daily : {};
+      const total = Number(v.total) || 0;
+      const daily = Number(byDay[today]) || 0;
+      setFilterClicks({
+        total,
+        daily,
+        updatedAt: Number(v.updatedAt) || 0,
+        byDay,
+      });
+      if (lastTotal >= 0 && total > lastTotal) {
+        setFilterClickPulse(true);
+        window.setTimeout(() => setFilterClickPulse(false), 900);
+      }
+      lastTotal = total;
+    });
+    return () => unsub();
+  }, [user?.email]);
 
   useEffect(() => {
     if (!user?.email) return undefined;
@@ -285,46 +319,107 @@ function Dashboard() {
         showWelcomeNotice={showWelcomeNotice}
         onDismissWelcome={handleDismissWelcome}
       />
-      <div className={styles.mainInner + (needsTelegram ? ' ' + styles.mainBlocked : '')}>
-        {/* Title */}
+      <div className={`${styles.mainInner} pageEnter${needsTelegram ? ` ${styles.mainBlocked}` : ''}`}>
         <div className={styles.pageTitle}>
           <div>
+            <p className={styles.pageEyebrow}>Overview</p>
             <h1>Dashboard</h1>
-            <p>Daily stats + overall earning ka clean overview.</p>
+            <p>Live stats, routing, aur earning — ek clean view.</p>
           </div>
         </div>
 
         <aside className={styles.siteNotice} role="status">
           <div className={styles.siteNoticeHead}>
-            <span aria-hidden>●</span>
-            <strong>TShortner is live</strong>
+            <span className={styles.siteNoticeDot} aria-hidden />
+            <strong>Panel live</strong>
           </div>
           <p>
-            Panel ready hai. Pehla short link{' '}
-            <Link to="/links">Links</Link> se banao, traffic share karo, phir earning yahan
-            dikhegi. Withdraw{' '}
-            <Link to="/wallet">Wallet</Link> se ($10 min).
+            Pehla short link <Link to="/links">Links</Link> se banao, traffic share karo —
+            earning yahan dikhegi. Withdraw <Link to="/wallet">Wallet</Link> se ($10 min).
           </p>
         </aside>
 
         {error && <div className={styles.error}>{error}</div>}
 
-        {/* New User Plan — Filter Bot / open.tshortner /t /x */}
-        <section className={styles.planCard}>
-          <div className={styles.sectionTitle}>
-            <div>
-              <h2>New User Plan</h2>
-              <span>
-                Naye visitor (IP pehle track nahi) ko yeh link. Known IP: /t → original, /x → player.
-              </span>
+        {/* First-visit plan link — Filter Bot / open.tshortner /t /x */}
+        <section className={styles.planCard} aria-labelledby="plan-heading">
+          <div className={styles.planTop}>
+            <div className={styles.planIdentity}>
+              <div className={styles.planIcon} aria-hidden>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M10 13a5 5 0 0 0 7.07 0l2.83-2.83a5 5 0 0 0-7.07-7.07L11 4.93"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    d="M14 11a5 5 0 0 0-7.07 0L4.1 13.83a5 5 0 0 0 7.07 7.07L13 19.07"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+              <div>
+                <p className={styles.planEyebrow}>Traffic routing</p>
+                <h2 id="plan-heading">First-visit plan link</h2>
+                <p className={styles.planLead}>
+                  Naye visitor ko aapka offer open hota hai. Returning IP pe short link
+                  normal flow (/t original · /x player) follow karti hai.
+                </p>
+              </div>
             </div>
-            <span
-              className={planEnabled ? styles.planBadgeOn : styles.planBadgeOff}
-              aria-live="polite"
-            >
-              {planEnabled ? 'Active' : 'Off'}
-            </span>
+            <div className={styles.planSwitchWrap}>
+              <span
+                className={planEnabled ? styles.planBadgeOn : styles.planBadgeOff}
+                aria-live="polite"
+              >
+                {planEnabled ? 'Active' : 'Off'}
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={planEnabled}
+                aria-label="Enable first-visit plan"
+                className={`${styles.planSwitch}${planEnabled ? ` ${styles.planSwitchOn}` : ''}`}
+                onClick={() => setPlanEnabled((v) => !v)}
+              >
+                <span className={styles.planSwitchKnob} />
+              </button>
+            </div>
           </div>
+
+          <ol className={styles.planFlow} aria-label="How routing works">
+            <li>
+              <span className={styles.planFlowNum}>1</span>
+              <div>
+                <strong>New IP</strong>
+                <span>Plan link open</span>
+              </div>
+            </li>
+            <li className={styles.planFlowArrow} aria-hidden>
+              →
+            </li>
+            <li>
+              <span className={styles.planFlowNum}>2</span>
+              <div>
+                <strong>Known IP</strong>
+                <span>/t or /x normal</span>
+              </div>
+            </li>
+            <li className={styles.planFlowArrow} aria-hidden>
+              →
+            </li>
+            <li>
+              <span className={styles.planFlowNum}>3</span>
+              <div>
+                <strong>You earn</strong>
+                <span>Stats update</span>
+              </div>
+            </li>
+          </ol>
+
           <form
             className={styles.planForm}
             onSubmit={async (e) => {
@@ -354,37 +449,91 @@ function Dashboard() {
             }}
           >
             <label className={styles.planField}>
-              <span>Status</span>
-              <select
-                value={planEnabled ? '1' : '0'}
-                onChange={(e) => setPlanEnabled(e.target.value === '1')}
-                aria-label="New user plan status"
-              >
-                <option value="0">Disable — band</option>
-                <option value="1">Enable — activate</option>
-              </select>
-            </label>
-            <label className={styles.planField}>
-              <span>Plan link (edit)</span>
-              <input
-                type="url"
-                placeholder="https://example.com/your-offer"
-                value={planUrl}
-                onChange={(e) => setPlanUrl(e.target.value)}
-                aria-label="New user plan URL"
-              />
+              <span>Destination URL</span>
+              <div className={styles.planUrlRow}>
+                <input
+                  type="url"
+                  placeholder="https://your-offer.com/landing"
+                  value={planUrl}
+                  onChange={(e) => setPlanUrl(e.target.value)}
+                  aria-label="New user plan URL"
+                  autoComplete="url"
+                />
+                <button
+                  type="button"
+                  className={styles.planCopyBtn}
+                  disabled={!planUrl.trim()}
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(planUrl.trim());
+                      setPlanNote('Link copied.');
+                    } catch {
+                      setPlanNote('Copy fail.');
+                    }
+                  }}
+                >
+                  Copy
+                </button>
+              </div>
             </label>
             <div className={styles.planActions}>
               <button type="submit" className={styles.planSaveBtn} disabled={planSaving}>
-                {planSaving ? 'Saving…' : 'Save Plan'}
+                {planSaving ? 'Saving…' : 'Save plan'}
               </button>
               {planNote ? (
-                <span className={planNote.includes('saved') ? styles.planOk : styles.planErr}>
+                <span className={planNote.includes('saved') || planNote.includes('copied') ? styles.planOk : styles.planErr}>
                   {planNote}
                 </span>
-              ) : null}
+              ) : (
+                <span className={styles.planHint}>Toggle on + valid URL, phir save.</span>
+              )}
             </div>
           </form>
+        </section>
+
+        {/* /t/ clicks — filter bot only (live) */}
+        <section
+          className={`${styles.tClicksCard}${filterClickPulse ? ` ${styles.tClicksPulse}` : ''}`}
+          aria-labelledby="t-clicks-heading"
+        >
+          <div className={styles.tClicksHead}>
+            <div>
+              <p className={styles.planEyebrow}>Filter bot · /t/ only</p>
+              <h2 id="t-clicks-heading">Short link clicks</h2>
+              <p className={styles.tClicksLead}>
+                Sirf <code>/t/</code> visits count hote hain — live update. /x aur /v yahan
+                nahi dikhte.
+              </p>
+            </div>
+            <span className={styles.tClicksLive} aria-live="polite">
+              <span className={styles.tClicksLiveDot} aria-hidden />
+              Live
+            </span>
+          </div>
+          <div className={styles.tClicksGrid}>
+            <div className={styles.tClicksStat}>
+              <span className={styles.tClicksLabel}>Today</span>
+              <strong className={styles.tClicksValue}>{formatNumber(filterClicks.daily)}</strong>
+              <span className={styles.tClicksSub}>Daily /t/ clicks (IST)</span>
+            </div>
+            <div className={styles.tClicksStat}>
+              <span className={styles.tClicksLabel}>All time</span>
+              <strong className={styles.tClicksValue}>{formatNumber(filterClicks.total)}</strong>
+              <span className={styles.tClicksSub}>Total /t/ clicks</span>
+            </div>
+          </div>
+          <ul className={styles.tClicksDays} aria-label="Last 7 days /t/ clicks">
+            {Array.from({ length: 7 }, (_, i) => {
+              const day = kolkataDaysAgo(i);
+              const n = Number(filterClicks.byDay?.[day]) || 0;
+              return (
+                <li key={day}>
+                  <span>{i === 0 ? 'Today' : formatDateLabel(day)}</span>
+                  <strong>{formatNumber(n)}</strong>
+                </li>
+              );
+            })}
+          </ul>
         </section>
 
         {/* TOP STATS (6 CARDS) */}

@@ -257,7 +257,7 @@ function Wallet() {
         <div className={styles.pageTitle}>
           <div>
             <h1>Wallet</h1>
-            <p>Yahan se tum apna balance, pending earning aur UPI / Binance payouts manage karoge.</p>
+            <p>Balance, pending, aur payouts — UPI ya Binance.</p>
           </div>
           <div className={styles.tagSmall}>
             <span className={styles.tagDot}></span>

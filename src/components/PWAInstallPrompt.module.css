@@ -134,7 +134,7 @@
 
 [data-theme="light"] .installBtn {
   background: rgba(255, 255, 255, 0.95);
-  color: #059669;
+  color: #0052d4;
 }
 
 .laterBtn {
@@ -199,14 +199,14 @@
 @keyframes pwaGlowPulseLight {
   0%, 100% {
     box-shadow: 
-      0 8px 32px rgba(5, 150, 105, 0.5),
-      0 0 60px rgba(5, 150, 105, 0.3),
+      0 8px 32px rgba(0, 82, 212, 0.5),
+      0 0 60px rgba(0, 82, 212, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.2);
   }
   50% {
     box-shadow: 
-      0 10px 40px rgba(5, 150, 105, 0.7),
-      0 0 80px rgba(5, 150, 105, 0.5),
+      0 10px 40px rgba(0, 82, 212, 0.7),
+      0 0 80px rgba(0, 82, 212, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.25);
   }
 }

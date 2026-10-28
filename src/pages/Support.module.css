@@ -41,15 +41,16 @@
 }
 
 [data-theme="light"] .backLink:hover {
-  color: #d97706;
+  color: #0084ff;
 }
 
 .publicHeader h1 {
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: clamp(1.75rem, 4vw, 2.15rem);
+  font-weight: 750;
+  font-family: var(--font-display);
   color: var(--text-main);
   margin-bottom: 0.5rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 [data-theme="light"] .publicHeader h1 {
@@ -84,9 +85,11 @@
 }
 
 .pageTitle h1 {
-  font-size: 1.45rem;
+  font-size: clamp(1.4rem, 2.5vw, 1.7rem);
   color: var(--text-main);
-  font-weight: 700;
+  font-weight: 750;
+  font-family: var(--font-display);
+  letter-spacing: -0.025em;
 }
 
 [data-theme="light"] .pageTitle h1 {
@@ -226,7 +229,7 @@
 }
 
 [data-theme="light"] .btnOutline {
-  border: 1px solid rgba(217, 119, 6, 0.4);
+  border: 1px solid rgba(0, 132, 255, 0.4);
   background: #ffffff;
   color: #0f172a;
   font-weight: 600;
@@ -237,8 +240,8 @@
 }
 
 [data-theme="light"] .btnOutline:hover {
-  background: rgba(217, 119, 6, 0.1);
-  border-color: rgba(217, 119, 6, 0.6);
+  background: rgba(0, 132, 255, 0.1);
+  border-color: rgba(0, 132, 255, 0.6);
 }
 
 .pill {
@@ -361,15 +364,16 @@
 }
 
 [data-theme="light"] .backLink:hover {
-  color: #d97706;
+  color: #0084ff;
 }
 
 .publicHeader h1 {
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: clamp(1.75rem, 4vw, 2.15rem);
+  font-weight: 750;
+  font-family: var(--font-display);
   color: var(--text-main);
   margin-bottom: 0.5rem;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
 [data-theme="light"] .publicHeader h1 {
@@ -402,8 +406,8 @@
 }
 
 [data-theme="light"] .cardButton {
-  background: linear-gradient(135deg, #d97706, #f59e0b);
-  box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
+  background: linear-gradient(135deg, #0084ff, #00a3ff);
+  box-shadow: 0 4px 15px rgba(0, 132, 255, 0.4);
 }
 
 .cardButton:hover {
@@ -412,7 +416,7 @@
 }
 
 [data-theme="light"] .cardButton:hover {
-  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.6);
+  box-shadow: 0 6px 20px rgba(0, 132, 255, 0.6);
 }
 
 .sectionTitle {
@@ -441,7 +445,7 @@
 
 [data-theme="light"] .faqItem {
   background: rgba(255, 255, 255, 0.8);
-  border-color: rgba(217, 119, 6, 0.2);
+  border-color: rgba(0, 132, 255, 0.2);
 }
 
 .faqItem h3 {

@@ -138,7 +138,7 @@ function Profile() {
       <div className={styles.mainInner}>
         <div className={styles.pageTitle}>
           <h1>Profile</h1>
-          <p>Yahan se tum apni basic details + legal pages manage kar sakte ho.</p>
+          <p>Account details, Telegram, aur legal pages.</p>
         </div>
 
         {/* Account Details */}

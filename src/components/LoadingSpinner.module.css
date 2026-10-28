@@ -51,11 +51,11 @@
 }
 
 [data-theme="light"] .spinnerOuter {
-  border-top-color: #d97706;
-  border-right-color: #d97706;
+  border-top-color: #0084ff;
+  border-right-color: #0084ff;
   box-shadow: 
-    0 0 20px rgba(217, 119, 6, 0.5),
-    0 0 40px rgba(217, 119, 6, 0.3);
+    0 0 20px rgba(0, 132, 255, 0.5),
+    0 0 40px rgba(0, 132, 255, 0.3);
 }
 
 /* Middle Spinning Circle */
@@ -77,11 +77,11 @@
 }
 
 [data-theme="light"] .spinnerMiddle {
-  border-bottom-color: #d97706;
-  border-left-color: #d97706;
+  border-bottom-color: #0084ff;
+  border-left-color: #0084ff;
   box-shadow: 
-    0 0 15px rgba(217, 119, 6, 0.4),
-    inset 0 0 15px rgba(217, 119, 6, 0.2);
+    0 0 15px rgba(0, 132, 255, 0.4),
+    inset 0 0 15px rgba(0, 132, 255, 0.2);
 }
 
 /* Inner Spinning Circle */
@@ -102,9 +102,9 @@
 }
 
 [data-theme="light"] .spinnerInner {
-  border-top-color: #d97706;
-  border-bottom-color: #d97706;
-  background: rgba(217, 119, 6, 0.1);
+  border-top-color: #0084ff;
+  border-bottom-color: #0084ff;
+  background: rgba(0, 132, 255, 0.1);
 }
 
 /* Center Logo */
@@ -174,17 +174,17 @@
 }
 
 [data-theme="light"] .orbitCircle {
-  background: #d97706;
+  background: #0084ff;
   box-shadow: 
-    0 0 10px rgba(217, 119, 6, 0.8),
-    0 0 20px rgba(217, 119, 6, 0.5),
-    0 0 30px rgba(217, 119, 6, 0.3);
+    0 0 10px rgba(0, 132, 255, 0.8),
+    0 0 20px rgba(0, 132, 255, 0.5),
+    0 0 30px rgba(0, 132, 255, 0.3);
 }
 
 [data-theme="light"] .orbitSmall {
   box-shadow: 
-    0 0 8px rgba(217, 119, 6, 0.7),
-    0 0 15px rgba(217, 119, 6, 0.4);
+    0 0 8px rgba(0, 132, 255, 0.7),
+    0 0 15px rgba(0, 132, 255, 0.4);
 }
 
 /* Rotating Dots Around Center */
@@ -213,8 +213,8 @@
 }
 
 [data-theme="light"] .rotatingDot {
-  background: #d97706;
-  box-shadow: 0 0 8px rgba(217, 119, 6, 0.8);
+  background: #0084ff;
+  box-shadow: 0 0 8px rgba(0, 132, 255, 0.8);
 }
 
 /* Floating Particles */
@@ -233,8 +233,8 @@
 }
 
 [data-theme="light"] .particle {
-  background: #d97706;
-  box-shadow: 0 0 10px rgba(217, 119, 6, 0.5);
+  background: #0084ff;
+  box-shadow: 0 0 10px rgba(0, 132, 255, 0.5);
 }
 
 /* Loading Text */
@@ -272,8 +272,8 @@
 }
 
 [data-theme="light"] .loadingDots span {
-  background: #d97706;
-  box-shadow: 0 0 8px rgba(217, 119, 6, 0.6);
+  background: #0084ff;
+  box-shadow: 0 0 8px rgba(0, 132, 255, 0.6);
 }
 
 .loadingDots span:nth-child(1) {
@@ -309,7 +309,7 @@
 }
 
 [data-theme="light"] .glowEffect1 {
-  background: radial-gradient(circle, rgba(217, 119, 6, 0.3), transparent 70%);
+  background: radial-gradient(circle, rgba(0, 132, 255, 0.3), transparent 70%);
 }
 
 .glowEffect2 {
@@ -322,7 +322,7 @@
 }
 
 [data-theme="light"] .glowEffect2 {
-  background: radial-gradient(circle, rgba(5, 150, 105, 0.25), transparent 70%);
+  background: radial-gradient(circle, rgba(0, 82, 212, 0.25), transparent 70%);
 }
 
 .glowEffect3 {
@@ -335,7 +335,7 @@
 }
 
 [data-theme="light"] .glowEffect3 {
-  background: radial-gradient(circle, rgba(217, 119, 6, 0.25), transparent 70%);
+  background: radial-gradient(circle, rgba(0, 132, 255, 0.25), transparent 70%);
 }
 
 /* Animations */
@@ -440,15 +440,15 @@
   0%, 100% {
     transform: translate(-50%, -50%) scale(1);
     box-shadow: 
-      0 4px 20px rgba(217, 119, 6, 0.6),
-      0 0 40px rgba(217, 119, 6, 0.4),
+      0 4px 20px rgba(0, 132, 255, 0.6),
+      0 0 40px rgba(0, 132, 255, 0.4),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
   }
   50% {
     transform: translate(-50%, -50%) scale(1.05);
     box-shadow: 
-      0 6px 30px rgba(217, 119, 6, 0.8),
-      0 0 60px rgba(217, 119, 6, 0.6),
+      0 6px 30px rgba(0, 132, 255, 0.8),
+      0 0 60px rgba(0, 132, 255, 0.6),
       inset 0 1px 0 rgba(255, 255, 255, 0.35);
   }
 }

@@ -16,6 +16,18 @@
   padding: 1.4rem 1.2rem 2.4rem;
   box-sizing: border-box;
   width: 100%;
+  animation: layoutEnter 0.5s var(--ease-premium, cubic-bezier(0.16, 1, 0.3, 1)) both;
+}
+
+@keyframes layoutEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 900px) {
