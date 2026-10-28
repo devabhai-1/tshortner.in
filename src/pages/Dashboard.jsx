@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ref, get, update } from 'firebase/database';
+import { ref, get, set, update } from 'firebase/database';
 import { db } from '../firebase/config';
 import { useAuth } from '../context/AuthContext';
 import { emailToKey, formatMoney, formatNumber, formatDateLabel } from '../firebase/utils';
@@ -85,6 +85,10 @@ function Dashboard() {
   const [countryRange, setCountryRange] = useState('1');
   const [topCountries, setTopCountries] = useState([]);
   const [countriesLoading, setCountriesLoading] = useState(false);
+  const [planEnabled, setPlanEnabled] = useState(false);
+  const [planUrl, setPlanUrl] = useState('');
+  const [planSaving, setPlanSaving] = useState(false);
+  const [planNote, setPlanNote] = useState('');
 
   // Handle window resize for mobile detection
   useEffect(() => {
@@ -118,6 +122,9 @@ function Dashboard() {
         const savedTg = String(profile.telegramUsername || '').trim();
         setTelegramUsername(savedTg);
         setProfileChecked(true);
+        const plan = data.filterPlan || {};
+        setPlanEnabled(!!plan.enabled);
+        setPlanUrl(String(plan.url || plan.link || ''));
         const dash = data.dashboard || {};
         const wallet = data.wallet || {};
         const dailyMap = dash.daily || {};
@@ -301,6 +308,84 @@ function Dashboard() {
         </aside>
 
         {error && <div className={styles.error}>{error}</div>}
+
+        {/* New User Plan — Filter Bot / open.tshortner /t /x */}
+        <section className={styles.planCard}>
+          <div className={styles.sectionTitle}>
+            <div>
+              <h2>New User Plan</h2>
+              <span>
+                Naye visitor (IP pehle track nahi) ko yeh link. Known IP: /t → original, /x → player.
+              </span>
+            </div>
+            <span
+              className={planEnabled ? styles.planBadgeOn : styles.planBadgeOff}
+              aria-live="polite"
+            >
+              {planEnabled ? 'Active' : 'Off'}
+            </span>
+          </div>
+          <form
+            className={styles.planForm}
+            onSubmit={async (e) => {
+              e.preventDefault();
+              if (!user?.email) return;
+              setPlanSaving(true);
+              setPlanNote('');
+              const urlVal = planUrl.trim();
+              if (planEnabled && !/^https?:\/\//i.test(urlVal)) {
+                setPlanNote('Enable ke liye valid http(s) URL chahiye.');
+                setPlanSaving(false);
+                return;
+              }
+              try {
+                const emailKey = emailToKey(user.email);
+                await set(ref(db, 'users/' + emailKey + '/filterPlan'), {
+                  enabled: !!planEnabled,
+                  url: urlVal,
+                  updatedAt: Date.now(),
+                });
+                setPlanNote('Plan saved.');
+              } catch (err) {
+                console.error(err);
+                setPlanNote('Save error: ' + (err.code || err.message));
+              }
+              setPlanSaving(false);
+            }}
+          >
+            <label className={styles.planField}>
+              <span>Status</span>
+              <select
+                value={planEnabled ? '1' : '0'}
+                onChange={(e) => setPlanEnabled(e.target.value === '1')}
+                aria-label="New user plan status"
+              >
+                <option value="0">Disable — band</option>
+                <option value="1">Enable — activate</option>
+              </select>
+            </label>
+            <label className={styles.planField}>
+              <span>Plan link (edit)</span>
+              <input
+                type="url"
+                placeholder="https://example.com/your-offer"
+                value={planUrl}
+                onChange={(e) => setPlanUrl(e.target.value)}
+                aria-label="New user plan URL"
+              />
+            </label>
+            <div className={styles.planActions}>
+              <button type="submit" className={styles.planSaveBtn} disabled={planSaving}>
+                {planSaving ? 'Saving…' : 'Save Plan'}
+              </button>
+              {planNote ? (
+                <span className={planNote.includes('saved') ? styles.planOk : styles.planErr}>
+                  {planNote}
+                </span>
+              ) : null}
+            </div>
+          </form>
+        </section>
 
         {/* TOP STATS (6 CARDS) */}
         <section className={`${styles.statsGrid} ${styles.statsEnter}`}>

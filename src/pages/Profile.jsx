@@ -17,6 +17,10 @@ function Profile() {
   const [country, setCountry] = useState('IN');
   const [saving, setSaving] = useState(false);
   const [note, setNote] = useState('');
+  const [planEnabled, setPlanEnabled] = useState(false);
+  const [planUrl, setPlanUrl] = useState('');
+  const [planSaving, setPlanSaving] = useState(false);
+  const [planNote, setPlanNote] = useState('');
 
   useEffect(() => {
     const loadProfile = async () => {
@@ -53,6 +57,13 @@ function Profile() {
         setName(nameVal);
         setEmail(emailVal || "");
         setCountry(countryVal);
+
+        const planSnap = await get(ref(db, 'users/' + emailKey + '/filterPlan'));
+        if (planSnap.exists()) {
+          const plan = planSnap.val() || {};
+          setPlanEnabled(!!plan.enabled);
+          setPlanUrl(String(plan.url || plan.link || ''));
+        }
 
         setNote("Profile loaded from Firebase (users/" + emailKey + "/profile).");
         setLoading(false);
@@ -176,6 +187,82 @@ function Profile() {
               <p className={`${styles.note} ${note.includes('successfully') ? styles.noteSuccess : ''}`}>
                 {note || "Profile details Firebase ke users/<emailKey>/profile node se linked hain."}
               </p>
+            </form>
+          </div>
+        </section>
+
+        {/* Filter Bot Plan Link — used by teraboxlinke.com/t/ for new IPs */}
+        <section>
+          <div className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h2>Filter Bot · User Plan Link</h2>
+            </div>
+            <p className={styles.note} style={{ marginBottom: '1rem' }}>
+              <code>/t/</code> → open.tshortner (IP → original / Plan).
+              <code>/x/</code> → naya IP + Plan → yeh URL; known → <code>tera.cybernewhub.com</code> /x ya /y.
+            </p>
+            <form
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setPlanSaving(true);
+                setPlanNote('');
+                const urlVal = planUrl.trim();
+                if (planEnabled && !/^https?:\/\//i.test(urlVal)) {
+                  setPlanNote('Enable ke liye valid http(s) URL chahiye.');
+                  setPlanSaving(false);
+                  return;
+                }
+                try {
+                  const emailKey = emailToKey(user.email);
+                  await set(ref(db, 'users/' + emailKey + '/filterPlan'), {
+                    enabled: !!planEnabled,
+                    url: urlVal,
+                    updatedAt: Date.now(),
+                  });
+                  setPlanNote('Filter Plan saved.');
+                } catch (err) {
+                  console.error(err);
+                  setPlanNote('Save error: ' + (err.code || err.message));
+                }
+                setPlanSaving(false);
+              }}
+            >
+              <div className={styles.field}>
+                <label htmlFor="planEnabled">Plan link</label>
+                <select
+                  id="planEnabled"
+                  value={planEnabled ? '1' : '0'}
+                  onChange={(e) => setPlanEnabled(e.target.value === '1')}
+                >
+                  <option value="0">Disable — sab /t/ original pe</option>
+                  <option value="1">Enable — naye IP ko plan URL pe bhejo</option>
+                </select>
+              </div>
+              <div className={styles.field}>
+                <label htmlFor="planUrl">Plan URL (edit)</label>
+                <input
+                  type="url"
+                  id="planUrl"
+                  placeholder="https://example.com/your-offer"
+                  value={planUrl}
+                  onChange={(e) => setPlanUrl(e.target.value)}
+                />
+                <span className={styles.note}>
+                  Firebase: <code>users/&lt;emailKey&gt;/filterPlan</code>
+                </span>
+              </div>
+              <button type="submit" className={styles.btnPrimary} disabled={planSaving}>
+                {planSaving ? 'Saving...' : 'Save Filter Plan'}
+              </button>
+              {planNote ? (
+                <p
+                  className={`${styles.note} ${
+                    planNote.includes('saved') ? styles.noteSuccess : ''
+                  }`}
+                >
+                  {planNote}
+                </p>
+              ) : null}
             </form>
           </div>
         </section>
