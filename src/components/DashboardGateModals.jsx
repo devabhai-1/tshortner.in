@@ -14,14 +14,12 @@ export default function DashboardGateModals({
   needsTelegram,
   telegramUsername,
   onSaveTelegram,
-  showWelcomeNotice,
-  onDismissWelcome,
 }) {
   const [input, setInput] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  if (!needsTelegram && !showWelcomeNotice) return null;
+  if (!needsTelegram) return null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,28 +87,6 @@ export default function DashboardGateModals({
                 This step is required. Dashboard access will be enabled after you save.
               </p>
             </form>
-          </div>
-        ) : null}
-
-        {showWelcomeNotice ? (
-          <div className={styles.noticeModal} role="alertdialog" aria-labelledby="welcome-title">
-            <div className={styles.noticeHeader}>
-              <span className={styles.noticeIcon} aria-hidden>
-                📢
-              </span>
-              <h3 id="welcome-title">TShortner</h3>
-            </div>
-
-            <div className={styles.noticeBlock}>
-              <p className={styles.noticeText}>
-                <strong>TShortner is live.</strong> Links se pehla short link banao, traffic share
-                karo, earning Dashboard par dikhegi. Withdraw Wallet se — minimum $10.
-              </p>
-            </div>
-
-            <button type="button" className={styles.secondaryBtn} onClick={onDismissWelcome}>
-              Got it / Samajh gaya
-            </button>
           </div>
         ) : null}
       </div>

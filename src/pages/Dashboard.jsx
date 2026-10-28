@@ -70,7 +70,6 @@ function Dashboard() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [telegramUsername, setTelegramUsername] = useState('');
   const [profileChecked, setProfileChecked] = useState(false);
-  const [welcomeDismissed, setWelcomeDismissed] = useState(false);
   const [stats, setStats] = useState({
     dailyEarning: 0,
     dailyCPM: 0,
@@ -257,7 +256,6 @@ function Dashboard() {
 
   const needsTelegram = profileChecked && !telegramUsername;
 
-  const showWelcomeNotice = !welcomeDismissed;
 
   const handleSaveTelegram = useCallback(
     async (username) => {
@@ -272,10 +270,6 @@ function Dashboard() {
     },
     [user],
   );
-
-  const handleDismissWelcome = useCallback(() => {
-    setWelcomeDismissed(true);
-  }, []);
 
   const chartDataLast10 = useMemo(() => {
     if (!dailyData.length) return [];
@@ -316,8 +310,6 @@ function Dashboard() {
         needsTelegram={needsTelegram}
         telegramUsername={telegramUsername}
         onSaveTelegram={handleSaveTelegram}
-        showWelcomeNotice={showWelcomeNotice}
-        onDismissWelcome={handleDismissWelcome}
       />
       <div className={`${styles.mainInner} pageEnter${needsTelegram ? ` ${styles.mainBlocked}` : ''}`}>
         <div className={styles.pageTitle}>
