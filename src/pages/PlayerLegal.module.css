@@ -1,0 +1,205 @@
+.container {
+  min-height: 100vh;
+  padding: 2.5rem max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(255, 196, 0, 0.15), transparent 50%),
+    linear-gradient(180deg, #090B0E 0%, #000000 100%);
+  color: var(--text-main, #EAEAEA);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.content {
+  max-width: 820px;
+  margin: 0 auto;
+  background: rgba(18, 22, 28, 0.95);
+  border-radius: 16px;
+  padding: 2.5rem 2.5rem;
+  border: 1px solid rgba(255, 196, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  background: rgba(255, 196, 0, 0.12);
+  color: #FFC400;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 196, 0, 0.3);
+}
+
+.content h1 {
+  font-size: 2rem;
+  margin-bottom: 0.35rem;
+  color: #FFFFFF;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.lastUpdated {
+  font-size: 0.85rem;
+  color: #8C96A5;
+  margin-bottom: 1.5rem;
+}
+
+.tabNav {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 2rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+}
+
+.tabLink {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #8C96A5;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.tabLink:hover {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.activeTab {
+  color: #000000 !important;
+  background: #FFC400 !important;
+  border-color: #FFC400 !important;
+  font-weight: 700;
+}
+
+.content section {
+  margin-bottom: 2rem;
+}
+
+.content h2 {
+  font-size: 1.2rem;
+  color: #FFC400;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.content p {
+  color: #C8D1DC;
+  line-height: 1.7;
+  font-size: 0.95rem;
+  margin-bottom: 0.85rem;
+}
+
+.content ul {
+  padding-left: 1.25rem;
+  margin-bottom: 1.2rem;
+}
+
+.content li {
+  color: #C8D1DC;
+  line-height: 1.65;
+  font-size: 0.95rem;
+  margin-bottom: 0.45rem;
+}
+
+.content li strong {
+  color: #FFFFFF;
+}
+
+.highlightBox {
+  background: rgba(255, 196, 0, 0.06);
+  border-left: 3px solid #FFC400;
+  padding: 1rem 1.25rem;
+  border-radius: 0 8px 8px 0;
+  margin: 1.25rem 0;
+}
+
+.highlightBox p {
+  margin: 0;
+  color: #E2E8F0;
+  font-size: 0.9rem;
+}
+
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin: 1.5rem 0;
+}
+
+.contactCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.contactCard:hover {
+  border-color: rgba(255, 196, 0, 0.35);
+  transform: translateY(-2px);
+}
+
+.contactCard h3 {
+  font-size: 1rem;
+  color: #FFFFFF;
+  margin-bottom: 0.35rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contactCard p {
+  font-size: 0.85rem;
+  color: #8C96A5;
+  margin-bottom: 0.75rem;
+}
+
+.contactCard a {
+  color: #FFC400;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  word-break: break-all;
+}
+
+.contactCard a:hover {
+  text-decoration: underline;
+}
+
+.backHome {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2rem;
+  color: #8C96A5;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.backHome:hover {
+  color: #FFC400;
+}
+
+@media (max-width: 640px) {
+  .content {
+    padding: 1.5rem 1.25rem;
+  }
+  .content h1 {
+    font-size: 1.6rem;
+  }
+}

@@ -1,5 +1,8 @@
 {
   "rewrites": [
+    { "source": "/player/privacy", "destination": "/index.html" },
+    { "source": "/player/terms", "destination": "/index.html" },
+    { "source": "/player/contact", "destination": "/index.html" },
     {
       "source": "/((?!manifest\\.json|sw\\.js|favicon|icon-|apple-touch-icon|og-image|browserconfig|site\\.webmanifest|player/).*)",
       "destination": "/index.html"
