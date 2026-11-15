@@ -3,7 +3,6 @@
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  contain: layout style;
   overscroll-behavior: none;
   position: relative;
 }
