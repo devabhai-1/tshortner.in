@@ -1,5 +1,6 @@
 import Navbar from './Navbar';
 import FloatingBottomNav from './FloatingBottomNav';
+import Footer from './footer/Footer';
 import styles from './Layout.module.css';
 
 function Layout({ children, subtitle }) {
@@ -12,6 +13,7 @@ function Layout({ children, subtitle }) {
         </div>
       </main>
       <FloatingBottomNav />
+      <Footer />
     </div>
   );
 }

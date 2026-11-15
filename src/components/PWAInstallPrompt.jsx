@@ -22,7 +22,10 @@ function PWAInstallPrompt() {
       return;
     }
 
-    const dismissed = sessionStorage.getItem('tshortner_pwa_dismissed') === '1';
+    // Auto-dismiss PWA popup to avoid blocking the page
+    try { sessionStorage.setItem('tshortner_pwa_dismissed', '1'); } catch {}
+
+    const dismissed = true;
 
     // Fallback tip (iOS / browsers without beforeinstallprompt)
     const showPopup = setTimeout(() => {
