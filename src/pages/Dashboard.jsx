@@ -335,13 +335,14 @@ function Dashboard() {
   }
 
   return (
-    <Layout activeNav="dashboard">
+    <>
       <DashboardGateModals
         needsTelegram={needsTelegram}
         telegramUsername={telegramUsername}
         onSaveTelegram={handleSaveTelegram}
       />
-      <div className={`${styles.mainInner} pageEnter${needsTelegram ? ` ${styles.mainBlocked}` : ''}`}>
+      <Layout activeNav="dashboard">
+        <div className={`${styles.mainInner} pageEnter${needsTelegram ? ` ${styles.mainBlocked}` : ''}`}>
         <div className={styles.pageTitle}>
           <div>
             <p className={styles.pageEyebrow}>Overview</p>
@@ -1007,6 +1008,7 @@ function Dashboard() {
         </section>
       </div>
     </Layout>
+    </>
   );
 }
 

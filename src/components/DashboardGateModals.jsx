@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styles from './DashboardGateModals.module.css';
 
 export function normalizeTelegramUsername(raw) {
@@ -19,13 +19,18 @@ export default function DashboardGateModals({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
-  if (!needsTelegram) return null;
+  useEffect(() => {
+    if (!needsTelegram) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [needsTelegram]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
     const normalized = normalizeTelegramUsername(input);
     if (!normalized) {
-      setError('Enter a valid Telegram username (3–32 characters; @ is optional).');
+      setError('Enter a valid Telegram username (3-32 characters; @ is optional).');
       return;
     }
     setSaving(true);
@@ -37,58 +42,58 @@ export default function DashboardGateModals({
     } finally {
       setSaving(false);
     }
-  };
+  }, [input, onSaveTelegram]);
+
+  if (!needsTelegram) return null;
 
   return (
     <div className={styles.backdrop} role="presentation">
       <div className={styles.stack}>
-        {needsTelegram ? (
-          <div
-            className={styles.modal}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="tg-username-title"
-          >
-            <div className={styles.modalHeader}>
-              <span className={styles.icon} aria-hidden>
-                ✈️
-              </span>
-              <h2 id="tg-username-title">Telegram Username Required</h2>
-            </div>
-            <p className={styles.lead}>
-              To continue, please provide your <strong>Telegram username</strong>. This is a
-              one-time setup and will be linked to your account for support and updates.
-            </p>
-            {telegramUsername ? (
-              <p className={styles.savedHint}>
-                Saved: <strong>@{telegramUsername}</strong>
-              </p>
-            ) : null}
-            <form onSubmit={handleSubmit} className={styles.form}>
-              <label htmlFor="tgUsernameInput">Telegram username</label>
-              <div className={styles.inputRow}>
-                <span className={styles.at}>@</span>
-                <input
-                  id="tgUsernameInput"
-                  type="text"
-                  autoComplete="off"
-                  placeholder="your_username"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  disabled={saving}
-                  required
-                />
-              </div>
-              {error ? <p className={styles.err}>{error}</p> : null}
-              <button type="submit" className={styles.primaryBtn} disabled={saving}>
-                {saving ? 'Saving…' : 'Save & Continue'}
-              </button>
-              <p className={styles.note}>
-                This step is required. Dashboard access will be enabled after you save.
-              </p>
-            </form>
+        <div
+          className={styles.modal}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="tg-username-title"
+        >
+          <div className={styles.modalHeader}>
+            <span className={styles.icon} aria-hidden>
+              ✈️
+            </span>
+            <h2 id="tg-username-title">Telegram Username Required</h2>
           </div>
-        ) : null}
+          <p className={styles.lead}>
+            To continue, please provide your <strong>Telegram username</strong>. This is a
+            one-time setup and will be linked to your account for support and updates.
+          </p>
+          {telegramUsername ? (
+            <p className={styles.savedHint}>
+              Saved: <strong>@{telegramUsername}</strong>
+            </p>
+          ) : null}
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <label htmlFor="tgUsernameInput">Telegram username</label>
+            <div className={styles.inputRow}>
+              <span className={styles.at}>@</span>
+              <input
+                id="tgUsernameInput"
+                type="text"
+                autoComplete="off"
+                placeholder="your_username"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                disabled={saving}
+                required
+              />
+            </div>
+            {error ? <p className={styles.err}>{error}</p> : null}
+            <button type="submit" className={styles.primaryBtn} disabled={saving}>
+              {saving ? 'Saving…' : 'Save & Continue'}
+            </button>
+            <p className={styles.note}>
+              This step is required. Dashboard access will be enabled after you save.
+            </p>
+          </form>
+        </div>
       </div>
     </div>
   );
